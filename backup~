@@ -1,16 +1,14 @@
-module classTrap
-	implicit none
-	private
-	public :: Trap, getTrapName, getTrapType, triggerTrap, effectPlayer, trapPrint
+!backup functions
+! Set the name of the trap.
+	subroutine setTrapName(this, new_trap_name)
+		implicit none
+		type(Trap), intent(in) :: this
+		character (len=40) :: new_trap_name
 		
-	type Trap 
-		character (len=40) :: trap_name  	!The name of the trap
-		integer :: trap_type	 						!The trap type: 1 - damage, 2 - displace, 3 - impair
-		logical :: triggered = .false.		!Whether or not the trap has been triggered
-	end type Trap
+		! Set the new trap name
+		this%trap_name = new_trap_name
+	end subroutine setTrapName
 	
-! Set up the methods for the trap module.
-contains
 	! Return the name of the trap.
 	function getTrapName(this) result (trap_name)
 		implicit none
@@ -21,11 +19,21 @@ contains
 		trap_name = this%trap_name
 	end function getTrapName
 	
+	! Set the type of the trap.
+	subroutine setTrapType(this, new_trap_type)
+		implicit none
+		type(Trap), intent(in) :: this
+		character (len=10) :: new_trap_type
+		
+		! Set the type of the trap
+		this%trap_type = new_trap_type
+	end subroutine setTrapType
+	
 	! Return the type of the trap. 
 	function getTrapType(this) result (trap_type)
 		implicit none
 		type(Trap), intent(in) :: this
-		integer :: trap_type
+		character (len=10) :: trap_type
 		
 		! Return the type of the trap
 		trap_type = this%trap_type
@@ -34,24 +42,22 @@ contains
 	! This function gets called when a player triggers a trap
 	subroutine triggerTrap(this) 
 		implicit none
-		type(Trap) :: this
-		
-		this%triggered = .true.
-	end subroutine triggerTrap
-	
-	subroutine effectPlayer(this)
-		implicit none
 		type(Trap), intent(in) :: this
 		
-		print *, this%trap_type
-		
-		if (this%trap_type .eq. 1) then
+		this%triggered = .true.
+		call effectPlayer()
+	end subroutine triggerTrap
+	
+	! This method effects the player once a trap is triggered
+	subroutine effectPlayer() 
+		implicit none
+		if (trap_type == "damage") then
 			! if condition is true then print the following 
 			print*, "This is a damage trap." 
-		else if (this%trap_type .eq. 2) then
+		else if (trap_type == "displace") then
 			! if else if condition is true 
 			print*, "This is a displacement trap." 
-		else if(this%trap_type .eq. 3) then
+		else if(trap_type == "impair") then
 			! if else if condition is true  
 			print*, "This is an impair trap." 
 		else
@@ -60,21 +66,4 @@ contains
 		end if
 	end subroutine effectPlayer
 	
-	subroutine trapPrint(this)
-		implicit none
-    type(Trap), intent(in) :: this
-    
-    print *, 'Trap: name = ', trim(this%trap_name), ' type = ', this%trap_type
-  end subroutine trapPrint
-end module classTrap
-
-program trapTest
-	use classTrap
-	implicit none
 	
-	type(Trap) :: t = Trap("Bear-trap", 1)
-	call trapPrint(t)
-	call triggerTrap(t)
-	call effectPlayer(t)
-	call trapPrint(t)
-end program trapTest
