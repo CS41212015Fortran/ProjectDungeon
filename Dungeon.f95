@@ -21,7 +21,7 @@ program dungeon
 		 player%hp=1
 		 player%mana=1
 
-
+		 !display info
 		 Print *, player%name
 		 Print *, player%strength
 		 Print *, player%intelegence
