@@ -39,15 +39,20 @@ contains
 		this%triggered = .true.
 	end subroutine triggerTrap
 	
-	subroutine effectPlayer(this)
+	subroutine effectPlayer(this, plr)
+		use classPlayer
 		implicit none
 		type(Trap), intent(in) :: this
+		type(Player) :: plr
 		
 		print *, this%trap_type
 		
 		if (this%trap_type .eq. 1) then
 			! if condition is true then print the following 
-			print*, "This is a damage trap." 
+			print*, "The bear-trap catches your foot and injures you."
+			print*, "You take 2 damage."
+			plr%hp = plr%hp - 2
+			 
 		else if (this%trap_type .eq. 2) then
 			! if else if condition is true 
 			print*, "This is a displacement trap." 
@@ -68,13 +73,3 @@ contains
   end subroutine trapPrint
 end module classTrap
 
-program trapTest
-	use classTrap
-	implicit none
-	
-	type(Trap) :: t = Trap("Bear-trap", 1)
-	call trapPrint(t)
-	call triggerTrap(t)
-	call effectPlayer(t)
-	call trapPrint(t)
-end program trapTest

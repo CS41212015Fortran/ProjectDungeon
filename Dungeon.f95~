@@ -14,3 +14,8 @@ module classPlayer
 	end type Player
 	   
 end module classPlayer
+
+program playerTest
+	use classPlayer
+	implicit none
+end program playerTest
