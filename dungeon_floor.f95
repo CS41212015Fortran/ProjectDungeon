@@ -5,7 +5,6 @@ module dungeon_floor
   real :: direction_chance = 0.66 !chance that any direction will be available
   real :: stair_chance = .15      !chance that there are stairs and we can go down a floor
   
-  
   !TODO	might want to move this to a greater scope
   integer :: floor_number = 0 !number of the floor
   
@@ -82,18 +81,42 @@ module dungeon_floor
     END IF
   end subroutine go_north
   
+  subroutine go_east()
+    IF (is_east) THEN
+      !destroy old room and make a new one "to the east"
+      call make_room(floor_number)
+    END IF
+  end subroutine go_east
+  
+  subroutine go_south()
+    IF (is_south) THEN
+      !destroy old room and make a new one "to the south"
+      call make_room(floor_number)
+    END IF
+  end subroutine go_south
+  
+  subroutine go_west()
+    IF (is_west) THEN
+      !destroy old room and make a new one "to the west"
+      call make_room(floor_number)
+    END IF
+  end subroutine go_west
+  
   subroutine go_down()
     IF (is_down) THEN
       !destroy old room and make a new one "to the north"
       call make_room(floor_number+1)
       
       !set that there is an UP ladder in the room
+      is_up = .TRUE.
       call set_up_ladder()
     END IF
   end subroutine go_down
   
   subroutine go_up()
-    !Exit 
+    if (is_up) then
+      !Do the points and exit
+    end if
   end subroutine go_up
   
 end module dungeon_floor
