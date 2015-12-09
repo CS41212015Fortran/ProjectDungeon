@@ -1,7 +1,7 @@
 module class_dungeon_floor
 	implicit none
   private
-  public :: dungeon_floor, make_room, get_floor_number, get_is_north, get_is_east, &
+  public :: dungeon_floor, make_new_room, get_floor_number, get_is_north, get_is_east, &
             get_is_south, get_is_west, get_is_up, get_is_down
             
             !TODO: probably include some form of get mobs
@@ -20,8 +20,6 @@ module class_dungeon_floor
   
     logical :: is_stairs = .FALSE.     !for the stairs
   
-    logical :: is_up = .FALSE.         !to exit
-  
     !TODO make some stuff to hold mobs n stuff
     
   end type dungeon_floor
@@ -31,11 +29,11 @@ contains
   ! generate a floor based on number
   subroutine make_new_room(this)
     implicit none
-    type(dungeon_floor), intent(in) :: this
+    type(dungeon_floor) :: this
     real :: new_seed ! for random functions
     
     !increment our floor number
-    this%floor_number = floor_number + 1 !set our new floor number
+    this%floor_number = this%floor_number + 1 !set our new floor number
     
     !set up our random stuff
     call init_random_seed()
@@ -54,34 +52,34 @@ contains
     
     !generate a random width potentially based on floor number
     call random_number(new_seed)  
-    if (new_seed > (1 - direction_chance)) then
+    if (new_seed > (1 - this%direction_chance)) then
       this%is_north = .TRUE.
     end if
     
     call random_number(new_seed)  
-    if (new_seed > (1 - direction_chance)) then
+    if (new_seed > (1 - this%direction_chance)) then
       this%is_east = .TRUE.
     end if
     
     call random_number(new_seed)  
-    if (new_seed > (1 - direction_chance)) then
+    if (new_seed > (1 - this%direction_chance)) then
       this%is_south = .TRUE.
     end if
     
     call random_number(new_seed)  
-    if (new_seed > (1-direction_chance)) then
+    if (new_seed > (1-this%direction_chance)) then
       this%is_west = .TRUE.
     end if
     
     !In the event RNG sucks
-    if ((.NOT. is_north).AND.(.NOT. is_east).AND.(.NOT. is_south).AND.(.NOT. is_west)) then
+    if ((.NOT. this%is_north).AND.(.NOT. this%is_east).AND.(.NOT. this%is_south).AND.(.NOT. this%is_west)) then
       !GO NORTH!
       this%is_north = .TRUE.
     end if
   
     !for the down stairs
     call random_number(new_seed)
-    if (new_seed > (1 - stair_chance)) then
+    if (new_seed > (1 - this%stair_chance)) then
       this%is_down = .TRUE.
     end if
   
@@ -124,7 +122,7 @@ contains
   function get_is_south(this) result (is_south)
     implicit none
     type(dungeon_floor), intent(in) :: this
-    logical::is_north
+    logical::is_south
     
     !return south
     is_south = this%is_south
@@ -134,10 +132,10 @@ contains
   function get_is_west(this) result (is_west)
     implicit none
     type(dungeon_floor), intent(in) :: this
-    logical::is_south
+    logical::is_west
     
     !return west
-    is_south = this%is_south
+    is_west = this%is_west
 	end function get_is_west
   
   !Directions externally
@@ -204,7 +202,7 @@ contains
   
   subroutine go_down(this)
     implicit none
-    type(dungeon_floor), intent(in) :: this
+    type(dungeon_floor) :: this
     
     IF (this%is_down) THEN
       !destroy old room and make a new one "to the north"
