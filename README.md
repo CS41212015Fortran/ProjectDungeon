@@ -1,6 +1,6 @@
 # ProjectDungeon
 
-This project right here is the bomb diggity
+This project right here is the bomb diggity:
 
 "130293023982405435/10" -GameInformer
 
