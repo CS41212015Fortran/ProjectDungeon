@@ -3,7 +3,7 @@ module classPlayer
 
 	!type declaration
 	type Player
-		character(len=50) :: name
+		character(len=32) :: name
 		integer :: strength
 		integer :: intelegence
 		integer :: moxie
@@ -12,5 +12,5 @@ module classPlayer
 		integer :: xp
 		integer :: score
 	end type Player
-	   
+
 end module classPlayer
