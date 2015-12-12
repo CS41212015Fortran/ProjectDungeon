@@ -1,4 +1,6 @@
 module classTrap
+  use class_dungeon_floor
+  
 	implicit none
 	private
 	public :: Trap, getTrapName, getTrapType, triggerTrap, effectPlayer, trapPrint
@@ -41,7 +43,7 @@ contains
 		else
 			print*, "Trap has already been triggered. You can't disarm it!"
 		end if
-	end subroutine triggerTrap
+	end subroutine disarmTrap
 
 	! This function gets called when a player triggers a trap
 	subroutine triggerTrap(this, plr, dungeon)

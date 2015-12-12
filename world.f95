@@ -72,7 +72,7 @@ program world
 					! 	exit combat
 					! endif
 
-					if(p%hp<0)
+					if (p%hp<0) then
 						exit main
 				  end if
 
@@ -94,7 +94,7 @@ program world
 		  	! If the room contains a trap
 				if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_north(d)
@@ -103,7 +103,7 @@ program world
 		  else if(index(command, "south") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p , d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_south(d)
@@ -112,7 +112,7 @@ program world
 		  else if(index(command, "east") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_east(d)
@@ -121,7 +121,7 @@ program world
 		  else if(index(command, "west") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_west(d)
@@ -130,7 +130,7 @@ program world
 		  else if(index(command, "up") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_up(d)
@@ -139,7 +139,7 @@ program world
 		  else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_down(d)
