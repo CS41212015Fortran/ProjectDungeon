@@ -30,13 +30,20 @@ contains
   subroutine make_new_room(this, went_down)
     implicit none
     type(dungeon_floor) :: this
-    logical :: went_down ! if we went down
-    real :: the_time     ! for random seed
-    real :: new_seed     ! for random functions
+    logical :: went_down   ! if we went down
+    integer :: the_time(8) ! the time
+    integer :: mili_time   ! in miliseconds
+    real :: new_seed       ! for random functions
     
     !set up our random stuff
-    TIME(new_seed)
-    call RANDOM_SEED(new_seed)
+    
+    call date_and_time(VALUES = the_time)
+    mili_time = mili_time + the_time(3) * 86000000
+    mili_time = mili_time + the_time(5) * 3600000
+    mili_time = mili_time + the_time(6) * 60000
+    mili_time = mili_time + the_time(7) * 1000
+    mili_time = mili_time + the_time(8)
+    call RANDOM_SEED(mili_time)
     
     !no up ladders unless explicitely stated
     this%is_up = .FALSE.
@@ -51,8 +58,7 @@ contains
     this%is_west = .FALSE.
     
     !generate a random width potentially based on floor number
-    call RANDOM_NUMBER(new_seed)
-    (new_seed % 100)    
+    call RANDOM_NUMBER(new_seed)  
     if (new_seed > (1 - this%direction_chance)) then
       this%is_north = .TRUE.
     end if
@@ -91,8 +97,9 @@ contains
       !set that there is an UP ladder in the room
       this%is_up = .TRUE.
       
-      print*, "Welcome to floor "//this%dungeon_floor//"."
+      print*, "Welcome to floor ", this%floor_number, "."
     END IF
+    
     !TODO populate mobs and monsters
     
     !Output directions and stuff
@@ -106,7 +113,7 @@ contains
     ELSE IF (this%is_north.AND.this%is_south.AND.this%is_west) THEN
       print*, "Possible directions are North, South, and West."
     ELSE IF (this%is_east.AND.this%is_south.AND.this%is_west) THEN
-      print*, "Possible directions are East, South and West.
+      print*, "Possible directions are East, South and West."
     ELSE IF (this%is_north.AND.this%is_east) THEN
       print*, "There is both North and East."
     ELSE IF (this%is_north.AND.this%is_south) THEN
