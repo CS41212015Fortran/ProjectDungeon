@@ -11,6 +11,9 @@ module class_dungeon_floor
     !TODO make these constants
     real :: direction_chance = 0.66 !chance that any direction will be available
     real :: stair_chance = .15      !chance that there are stairs and we can go down a floor
+    real :: trap_chance = .25				!chance that there is a trap in the room
+    real :: treasure_chance = .20		!chance that there is a treasure chest in the room
+    real :: secret_chance = .10			!chance that there is a secret room
   
     !TODO	might want to move this to a greater scope
     integer :: floor_number = 0 !number of the floor
@@ -22,6 +25,9 @@ module class_dungeon_floor
     logical :: is_stairs = .FALSE.     !for the stairs
   
     !TODO make some stuff to hold mobs n stuff
+    logical :: has_trap = .FALSE.				!for the traps
+    logical :: has_treasure = .FALSE.		!for the treasure
+    logical :: has_secret = .FALSE.			!for the secret room
     
   end type dungeon_floor
 	
@@ -89,6 +95,24 @@ contains
     if (new_seed > (1 - this%stair_chance)) then
       this%is_down = .TRUE.
     end if
+    
+    !for the traps
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%trap_chance)) then
+      this%has_trap = .TRUE.
+    end if
+    
+    !for the treasure chests
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%treasure_chance)) then
+      this%has_treasure = .TRUE.
+    end if
+    
+    !for the secret rooms
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%secret_chance)) then
+      this%has_secret = .TRUE.
+    end if
   
     IF (went_down) then
       !increment the floor
@@ -102,8 +126,9 @@ contains
     
     !TODO populate mobs and monsters
     
-    !Output directions and stuff
+    !Output directions and instances of events, items, mobs, secret rooms, etc.
     print*, "You find yourself in a room."
+    
     IF (this%is_north.AND.this%is_east.AND.this%is_south.AND.this%is_west) THEN
       print*, "Possible directions are North, South, East, West."
     ELSE IF (this%is_north.AND.this%is_east.AND.this%is_south) THEN

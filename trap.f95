@@ -10,7 +10,7 @@ module classTrap
 	end type Trap
 
 ! Set up the methods for the trap module.
-contains
+contains	
 	! Return the name of the trap.
 	function getTrapName(this) result (trap_name)
 		implicit none
@@ -53,10 +53,7 @@ contains
 
 		if (this%trap_type .eq. 1) then
 			! if condition is true then print the following
-			print*, "The bear-trap catches your foot and injures you."
-
-      call srand(seed)
-      print*, int(rand()*4)+1, int(rand()*4)+1, int(rand()*4)+1, int(rand()*4)+1
+			print*, "The ", trim(this%trap_name), " catches your foot and injures you."
 
 			plr%hp = plr%hp - 2
 
