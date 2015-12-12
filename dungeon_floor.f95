@@ -1,4 +1,5 @@
 module class_dungeon_floor
+  use class_mob
 	implicit none
   private
   public :: dungeon_floor, make_new_room, get_floor_number, get_is_north, get_is_east, &
@@ -14,6 +15,7 @@ module class_dungeon_floor
     real :: trap_chance = .25				!chance that there is a trap in the room
     real :: treasure_chance = .20		!chance that there is a treasure chest in the room
     real :: secret_chance = .10			!chance that there is a secret room
+    real :: mob_chance = .05        !chance that there is a mob per mob 5 * .05 = .25
   
     !TODO	might want to move this to a greater scope
     integer :: floor_number = 0 !number of the floor
@@ -41,6 +43,8 @@ contains
     integer :: i, n, clock
     integer, dimension(:), allocatable :: seed
     real :: new_seed       ! for random functions
+    type(mob) :: mobs(5)   ! hold up to 5 mobs
+    integer   :: mob_count ! count of mobs
     
     !set up our random stuff
     call RANDOM_SEED(size = n)
@@ -113,6 +117,15 @@ contains
     if (new_seed > (1 - this%secret_chance)) then
       this%has_secret = .TRUE.
     end if
+    
+    !for mobs up to 5 times
+    do i=0,5
+      call RANDOM_NUMBER(new_seed)
+      if (new_seed > (1 - this%mob_chance)) then
+        mob_count = mob_count + 1
+        call new_mob(mobs(mob_count), this%floor_number)
+      end if
+    end do
   
     IF (went_down) then
       !increment the floor
