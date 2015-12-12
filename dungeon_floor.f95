@@ -32,19 +32,18 @@ contains
     implicit none
     type(dungeon_floor) :: this
     logical :: went_down   ! if we went down
-    integer :: the_time(8) ! the time
-    integer :: mili_time   ! in miliseconds
+    integer :: i, n, clock
+    integer, dimension(:), allocatable :: seed
     real :: new_seed       ! for random functions
     
     !set up our random stuff
+    call RANDOM_SEED(size = n)
+    allocate(seed(n))
     
-    call date_and_time(VALUES = the_time)
-    mili_time = mili_time + the_time(3) * 86000000
-    mili_time = mili_time + the_time(5) * 3600000
-    mili_time = mili_time + the_time(6) * 60000
-    mili_time = mili_time + the_time(7) * 1000
-    mili_time = mili_time + the_time(8)
-    call RANDOM_SEED(mili_time)
+    call system_clock(count = clock)
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    call RANDOM_SEED(PUT = seed)
+    deallocate(seed)
     
     !no up ladders unless explicitely stated
     this%is_up = .FALSE.
