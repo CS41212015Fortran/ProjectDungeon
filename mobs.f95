@@ -26,11 +26,7 @@ module class_Mob
 		print *, att%name, ' attacked ', def%name, ' for ', att%strength, ' damage'
 		def%health = def%health - att%strength
 
-	end subroutine attack
-
 end module class_Mob
-
-
 
 program mob_test
 	use class_Mob
