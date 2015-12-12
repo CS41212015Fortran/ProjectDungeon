@@ -2,7 +2,7 @@ module class_Mob
 	implicit none
 
 	private
-	public :: Mob, Mob_print, attack
+	public :: Mob, new_mob, get_info, attack
 
 	type Mob
 		character (len=20) :: name
