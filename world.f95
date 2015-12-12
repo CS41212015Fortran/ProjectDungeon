@@ -19,7 +19,6 @@ program world
 	p%xp=0
 	p%score=0
 	call update_derived_stats(p)
-	call print_stats(p)
 	call update_player_stats(p,'s',4)
 	call update_player_stats(p,'i',4)
 	call update_player_stats(p,'m',4)

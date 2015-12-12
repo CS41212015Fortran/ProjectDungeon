@@ -17,7 +17,8 @@ module classPlayer
 		integer :: melee_damage
 		integer :: keys
 		real :: dodge_chance
-		integer :: perception
+		real :: disarm_chance
+		real :: perception_chance
 	end type Player
 
 	contains
@@ -63,11 +64,13 @@ module classPlayer
 		implicit none
 		type(Player), intent(inout) :: this
 
-		this%hp = 80 + this%strength*5
+		this%hp_max = 80 + this%strength*5
+		this%hp = this%hp_max
 		this%mana = 60 + this%intelegence*10
 		this%melee_damage = (this%strength*2)-1
-		this%dodge_chance = ((this%moxie-1)*2)/100
-		this%perception = this%intelegence
+		this%dodge_chance = log(real(this%moxie))/5
+		this%disarm_chance = log(real(this%moxie))/3
+		this%perception_chance = log(real(this%intelegence))/5
 
 	end subroutine update_derived_stats
 
@@ -82,8 +85,9 @@ module classPlayer
 		Print  "(a14,i10)",'HP          = ',this%hp
 		Print  "(a14,i10)",'MANA        = ',this%mana
 		Print  "(a14,i10)",'SCORE       = ',this%score
-		Print  "(a14,i10)",'PERCEPTION  = ',this%perception
+		Print  "(a14,f10.1)",'PERCEPTION% = ',this%perception_chance
 		Print  "(a14,f10.1)",'DODGE%      = ',this%dodge_chance
+		Print  "(a14,f10.1)",'DISARM%     = ',this%disarm_chance
 		Print  "(a14,i10)",'MELEE DMG   = ',this%melee_damage
 		Print  "(a14,i10)",'KEYS        = ',this%keys
 		Print  "(a14,i10)",'XP          = ',this%xp
