@@ -40,7 +40,7 @@ contains
 	end subroutine triggerTrap
 
 	subroutine effectPlayer(this, plr)
-		use class_player
+		use classPlayer
 		implicit none
 		type(Trap), intent(in) :: this
 		type(Player) :: plr
