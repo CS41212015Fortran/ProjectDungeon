@@ -28,10 +28,8 @@ program world
 	Print  "(a14,i2)",'XP          = ',p%xp
 	Print  "(a14,i2)",'SCORE       = ',p%score
 
-	call trapPrint(t)
 	call triggerTrap(t)
 	call effectPlayer(t, p)
-	call trapPrint(t)
 
 	!display info
 	Print  "(a10)",adjustl(p%name)
