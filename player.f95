@@ -1,7 +1,7 @@
 module classPlayer
 	implicit none
 	private
-	public :: Player,update_player_stats,update_derived_stats,print_stats,has_key
+	public :: Player,update_player_stats,update_derived_stats,print_stats,has_key,short_stats
 
 	!type declaration
 	type Player
@@ -16,6 +16,7 @@ module classPlayer
 		integer :: score
 		integer :: melee_damage
 		integer :: keys
+		integer :: gold
 		real :: dodge_chance
 		real :: disarm_chance
 		real :: perception_chance
@@ -74,6 +75,15 @@ module classPlayer
 
 	end subroutine update_derived_stats
 
+	subroutine short_stats(this)
+		implicit none
+		type(Player), intent(in) :: this
+		Print  "(a14,i10)",'HP          = ',this%hp
+		Print  "(a14,i10)",'MANA        = ',this%mana
+		Print  "(a14,i10)",'KEYS        = ',this%keys
+		Print  "(a14,i10)",'GOLD        = ',this%gold
+	end subroutine short_stats
+
 	subroutine print_stats(this)
 		implicit none
 		type(Player), intent(in) :: this
@@ -90,6 +100,7 @@ module classPlayer
 		Print  "(a14,f10.1)",'DISARM%     = ',this%disarm_chance
 		Print  "(a14,i10)",'MELEE DMG   = ',this%melee_damage
 		Print  "(a14,i10)",'KEYS        = ',this%keys
+		Print  "(a14,i10)",'GOLD        = ',this%gold
 		Print  "(a14,i10)",'XP          = ',this%xp
 		Print  "(a14,i10)",'SCORE       = ',this%score
 
