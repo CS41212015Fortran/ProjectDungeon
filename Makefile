@@ -9,4 +9,4 @@ dungeon:
 	gfortran world.f95 player.o trap.o treasure.o dungeon_floor.o -o dungeon
 
 clean:
-	rm -f dungeon; rm -f *.o; rm -f *.mod; rm *~
+	rm -f dungeon; rm -f *.o; rm -f *.mod; rm -f *~
