@@ -223,7 +223,7 @@ contains
       print*, "You head to the North."
       
       !destroy old room and make a new one "to the north"
-      call make_room(this, .FALSE.)
+      call make_new_room(this, .FALSE.)
     
     ELSE    
       print*, "There is no North here."
@@ -238,7 +238,7 @@ contains
       print*, "You head to the East."
     
       !destroy old room and make a new one "to the east"
-      call make_room(this, .FALSE.)
+      call make_new_room(this, .FALSE.)
       
     ELSE
       print*, "There is no East here."
@@ -253,7 +253,7 @@ contains
       print*, "You head to the South."
     
       !destroy old room and make a new one "to the south"
-      call make_room(this, .FALSE.)
+      call make_new_room(this, .FALSE.)
     ELSE
       print*, "The is no South here."
     END IF
@@ -267,7 +267,7 @@ contains
       print*, "You head to the Weast."
     
       !destroy old room and make a new one "to the west"
-      call make_room(this, .FALSE.)
+      call make_new_room(this, .FALSE.)
     ELSE
       print*, "There is no West here."
     END IF
@@ -281,7 +281,7 @@ contains
       print*, "You head Down into the darkness."
     
       !destroy old room and make a new one "to the down"
-      call make_room(this, .TRUE.)
+      call make_new_room(this, .TRUE.)
       
     ELSE
       print*, "There is no ladder here with which to go Down."

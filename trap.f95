@@ -43,12 +43,12 @@ contains
 		end if
 	end subroutine triggerTrap
 
-	subroutine effectPlayer(this, plr, seed)
+	subroutine effectPlayer(this, plr)
 		use class_player
 		implicit none
 		type(Trap), intent(in) :: this
 		type(Player) :: plr
-		integer :: seed
+		integer :: seed = 1
 
 		if (this%trap_type .eq. 1) then
 			! if condition is true then print the following

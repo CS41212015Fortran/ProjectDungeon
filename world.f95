@@ -1,12 +1,14 @@
 program world
 	use classTrap
 	use class_player
+	use class_dungeon_floor
 	!Need to use this line for every program
 	implicit none
 
 	!declaring type variables
-	type(player) :: p
-	type(Trap)   :: t = Trap("Bear-trap", 1)
+	type(player) 				:: p
+	type(Trap)   				:: t = Trap("Bear-trap", 1)
+	type(dungeon_floor) :: d
 
 	!accessing the components of the structure
 	p%name= "Son Goku"
@@ -28,9 +30,6 @@ program world
 	Print  "(a14,i2)",'XP          = ',p%xp
 	Print  "(a14,i2)",'SCORE       = ',p%score
 
-	call triggerTrap(t)
-	call effectPlayer(t, p)
-
 	!display info
 	Print  "(a10)",adjustl(p%name)
 	Print  "(a14,i2)",'STRENGTH    = ',p%strength
@@ -40,5 +39,8 @@ program world
 	Print  "(a14,i2)",'MANA        = ',p%mana
 	Print  "(a14,i2)",'XP          = ',p%xp
 	Print  "(a14,i2)",'SCORE       = ',p%score
+
+	call make_new_room(d, .true.)
+	call go_east(d)
 
 end program world
