@@ -1,6 +1,8 @@
 module class_Mob
-	implicit none
-
+	use class_dungeon_floor
+  implicit none
+  
+  
 	private
 	public :: Mob, new_mob, get_info, attack
 
@@ -16,12 +18,11 @@ module class_Mob
     implicit none
     type(mob)           :: this
     type(dungeon_floor) :: d
-    integer :: i, n, clock
+    integer             :: get_dungeon_floor
+    integer :: i, n, clock, irand
     integer, dimension(:), allocatable :: seed
-    real    :: rrand
-    integer :: irand
-    real    :: dungeon_scale
-    dungeon_scale = (d%get_floor_number / 20)
+    real    :: rrand, dungeon_scale
+    dungeon_scale = (get_dungeon_floor(d) / 20)
     
     
     !set up our random stuff
@@ -51,12 +52,12 @@ module class_Mob
     
     call RANDOM_NUMBER(rrand)
     !health
-    irand ceiling(rran * (100 * dungeon_scale)) + (5 * dungeon_scale)
+    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale)
     this%health = irand
     
     call RANDOM_NUMBER(rrand)
     !strength
-    irand ceiling(rran * (100 * dungeon_scale)) + (5 * dungeon_scale)
+    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale)
     this%strength = irand
     
   end subroutine new_mob
