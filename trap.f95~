@@ -44,8 +44,12 @@ contains
 	end subroutine triggerTrap
 
 	subroutine effectPlayer(this, plr)
+<<<<<<< HEAD
+		use class_player
+=======
 		use classPlayer
 
+>>>>>>> a28a624ce35d0c6a330e9df34a7b96c94bfae655
 		implicit none
 		type(Trap), intent(in) :: this
 		type(Player) :: plr

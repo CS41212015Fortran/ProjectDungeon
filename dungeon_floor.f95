@@ -2,7 +2,8 @@ module class_dungeon_floor
 	implicit none
   private
   public :: dungeon_floor, make_new_room, get_floor_number, get_is_north, get_is_east, &
-            get_is_south, get_is_west, get_is_up, get_is_down
+            get_is_south, get_is_west, get_is_up, get_is_down, go_north, go_east, &
+            go_south, go_west, go_down, go_up
             
             !TODO: probably include some form of get mobs
 	

@@ -1,6 +1,6 @@
 module class_Mob
 	implicit none
-	
+
 	private
 	public :: Mob, Mob_print, attack
 
@@ -25,12 +25,8 @@ module class_Mob
 
 		print *, att%name, ' attacked ', def%name, ' for ', att%strength, ' damage'
 		def%health = def%health - att%strength
-		
-	end subroutine attack
-		
+
 end module class_Mob
-
-
 
 program mob_test
 	use class_Mob
@@ -46,5 +42,5 @@ program mob_test
 	call attack(p, e)
 
 	call Mob_print(e)
-	
+
 end program mob_test

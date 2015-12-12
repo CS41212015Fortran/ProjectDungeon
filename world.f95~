@@ -1,0 +1,67 @@
+program world
+	use classTrap
+<<<<<<< HEAD
+	use class_player
+	use class_dungeon_floor
+=======
+	use classPlayer
+>>>>>>> a28a624ce35d0c6a330e9df34a7b96c94bfae655
+	!Need to use this line for every program
+	implicit none
+
+	!declaring type variables
+<<<<<<< HEAD
+	type(player) 				:: p
+	type(Trap)   				:: t = Trap("Bear-trap", 1)
+	type(dungeon_floor) :: d
+=======
+	type(Player) :: p
+	type(Trap)   :: t = Trap("Bear-trap", 1)
+>>>>>>> a28a624ce35d0c6a330e9df34a7b96c94bfae655
+
+	!init player
+	p%name= "Son Goku"
+	p%strength=1
+	p%intelegence=1
+	p%moxie=1
+	p%xp=0
+	p%score=0
+	call update_derived_stats(p)
+	call print_stats(p)
+	call update_player_stats(p,'s',4)
+	call update_player_stats(p,'i',4)
+	call update_player_stats(p,'m',4)
+
+<<<<<<< HEAD
+	!display info
+	Print  "(a10)",adjustl(p%name)
+	Print  "(a14,i2)",'STRENGTH    = ',p%strength
+	Print  "(a14,i2)",'INTELEGENCE = ',p%intelegence
+	Print  "(a14,i2)",'MOXIE       = ',p%moxie
+	Print  "(a14,i2)",'HP          = ',p%hp
+	Print  "(a14,i2)",'MANA        = ',p%mana
+	Print  "(a14,i2)",'XP          = ',p%xp
+	Print  "(a14,i2)",'SCORE       = ',p%score
+
+	!display info
+	Print  "(a10)",adjustl(p%name)
+	Print  "(a14,i2)",'STRENGTH    = ',p%strength
+	Print  "(a14,i2)",'INTELEGENCE = ',p%intelegence
+	Print  "(a14,i2)",'MOXIE       = ',p%moxie
+	Print  "(a14,i2)",'HP          = ',p%hp
+	Print  "(a14,i2)",'MANA        = ',p%mana
+	Print  "(a14,i2)",'XP          = ',p%xp
+	Print  "(a14,i2)",'SCORE       = ',p%score
+=======
+	call print_stats(p)
+	call trapPrint(t)
+	call triggerTrap(t)
+	call effectPlayer(t, p)
+	call trapPrint(t)
+	call print_stats(p)
+>>>>>>> a28a624ce35d0c6a330e9df34a7b96c94bfae655
+
+	call make_new_room(d, .true.)
+	call go_east(d)
+
+end program world
