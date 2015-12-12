@@ -1,4 +1,5 @@
 module class_dungeon_floor
+  use class_mob
 	implicit none
   private
   public :: dungeon_floor, make_new_room, get_floor_number, get_is_north, get_is_east, &
@@ -11,6 +12,10 @@ module class_dungeon_floor
     !TODO make these constants
     real :: direction_chance = 0.66 !chance that any direction will be available
     real :: stair_chance = .15      !chance that there are stairs and we can go down a floor
+    real :: trap_chance = .25				!chance that there is a trap in the room
+    real :: treasure_chance = .20		!chance that there is a treasure chest in the room
+    real :: secret_chance = .10			!chance that there is a secret room
+    real :: mob_chance = .05        !chance that there is a mob per mob 5 * .05 = .25
   
     !TODO	might want to move this to a greater scope
     integer :: floor_number = 0 !number of the floor
@@ -22,6 +27,9 @@ module class_dungeon_floor
     logical :: is_stairs = .FALSE.     !for the stairs
   
     !TODO make some stuff to hold mobs n stuff
+    logical :: has_trap = .FALSE.				!for the traps
+    logical :: has_treasure = .FALSE.		!for the treasure
+    logical :: has_secret = .FALSE.			!for the secret room
     
   end type dungeon_floor
 	
@@ -35,6 +43,8 @@ contains
     integer :: i, n, clock
     integer, dimension(:), allocatable :: seed
     real :: new_seed       ! for random functions
+    type(mob) :: mobs(5)   ! hold up to 5 mobs
+    integer   :: mob_count ! count of mobs
     
     !set up our random stuff
     call RANDOM_SEED(size = n)
@@ -56,6 +66,14 @@ contains
     this%is_east = .FALSE.
     this%is_south = .FALSE.
     this%is_west = .FALSE.
+    
+    !for traps secret rooms
+    this%has_trap = .FALSE.
+    this%has_treasure = .FALSE.
+    this%has_secret = .FALSE.
+    
+    !reset mob count
+    mob_count = 0;
     
     !generate a random width potentially based on floor number
     call RANDOM_NUMBER(new_seed)  
@@ -89,6 +107,33 @@ contains
     if (new_seed > (1 - this%stair_chance)) then
       this%is_down = .TRUE.
     end if
+    
+    !for the traps
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%trap_chance)) then
+      this%has_trap = .TRUE.
+    end if
+    
+    !for the treasure chests
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%treasure_chance)) then
+      this%has_treasure = .TRUE.
+    end if
+    
+    !for the secret rooms
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%secret_chance)) then
+      this%has_secret = .TRUE.
+    end if
+    
+    !for mobs up to 5 times
+    do i=0,5
+      call RANDOM_NUMBER(new_seed)
+      if (new_seed > (1 - this%mob_chance)) then
+        mob_count = mob_count + 1
+        call new_mob(mobs(mob_count), this%floor_number)
+      end if
+    end do
   
     IF (went_down) then
       !increment the floor
@@ -100,10 +145,23 @@ contains
       print*, "Welcome to floor ", this%floor_number, "."
     END IF
     
-    !TODO populate mobs and monsters
     
-    !Output directions and stuff
+    !Output directions and instances of events, items, mobs, secret rooms, etc.
     print*, "You find yourself in a room."
+    
+    !TODO populate mobs and monsters
+    if (mob_count > 0) then
+      print "(a,$)", "There is a "
+      do i=0,mob_count
+        print "(a,$)", mobs(mob_count)
+      end do
+      print*, "here."
+    end if
+    
+    if(this%has_treasure) then
+      print*, "There is also a treasure chest."
+    end if
+    
     IF (this%is_north.AND.this%is_east.AND.this%is_south.AND.this%is_west) THEN
       print*, "Possible directions are North, South, East, West."
     ELSE IF (this%is_north.AND.this%is_east.AND.this%is_south) THEN

@@ -1,7 +1,5 @@
-module class_Mob
-	use class_dungeon_floor
+module class_mob
   implicit none
-  
   
 	private
 	public :: Mob, new_mob, get_info, attack
@@ -14,15 +12,14 @@ module class_Mob
 
 	contains
 
-  subroutine new_mob(this, d)
+  subroutine new_mob(this, dungeon_floor)
     implicit none
     type(mob)           :: this
-    type(dungeon_floor) :: d
-    integer             :: get_dungeon_floor
+    integer             :: dungeon_floor
     integer :: i, n, clock, irand
     integer, dimension(:), allocatable :: seed
     real    :: rrand, dungeon_scale
-    dungeon_scale = (get_dungeon_floor(d) / 20)
+    dungeon_scale = (dungeon_floor / 20)
     
     
     !set up our random stuff

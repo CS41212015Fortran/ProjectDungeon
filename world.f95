@@ -1,5 +1,6 @@
 program world
 	use classTrap
+	use classTreasure
 	use class_dungeon_floor
 	use classPlayer
 
@@ -7,8 +8,9 @@ program world
 	implicit none
 
 	!declaring type variables
+	type(Trap) 					:: t = Trap("bear-trap", 1)
+	type(Treasure)			:: c
 	type(player) 				:: p
-	type(Trap)   				:: t = Trap("Bear-trap", 1)
 	type(dungeon_floor) :: d
 	type(integer) :: points = 6
 	type(character) :: input
@@ -21,6 +23,7 @@ program world
 	p%intelegence=1
 	p%moxie=1
 	p%xp=0
+	p%keys=1
 	p%score=0
 	p%gold=0
 	call update_derived_stats(p)
@@ -94,5 +97,30 @@ program world
 		  read (*,'(A)') command
 	end do main
 print *, "Game Over: Your Final Score is ",p%score
+
+!NEW STUFF ABOVE!
+
+	call print_stats(p)
+	call make_new_room(d, .true.)
+	call go_east(d)
+
+	! If the room contains a trap
+  if (d%has_trap) then
+  	print*, "There is a trap in this room."
+  	t = Trap("mine", 1)
+  	call triggerTrap(t)
+  	call effectPlayer(t, p)
+  end if
+
+  !If the room contains a treasure chest
+  if (d%has_treasure) then
+  	print*, "There is a locked treasure chest in this room."
+  	call unlockChest(c, p)
+  end if
+
+  !If the room contains a secret room
+  if (d%has_secret) then
+  	print*, "There is a secret room somewhere here."
+  end if
 
 end program world
