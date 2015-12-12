@@ -32,9 +32,6 @@ contains
     type(dungeon_floor) :: this
     real :: new_seed ! for random functions
     
-    !increment our floor number
-    this%floor_number = this%floor_number + 1 !set our new floor number
-    
     !set up our random stuff
     call init_random_seed()
     
@@ -205,11 +202,16 @@ contains
     type(dungeon_floor) :: this
     
     IF (this%is_down) THEN
-      !destroy old room and make a new one "to the north"
+      !destroy old room and make a new one "to the down"
       call make_room(this)
+      
+      !increment the floor
+      this%floor_number = this%floor_number + 1
       
       !set that there is an UP ladder in the room
       this%is_up = .TRUE.
+      
+      
     END IF
   end subroutine go_down
   
