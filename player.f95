@@ -1,8 +1,8 @@
-module classPlayer
+module class_player
 	implicit none
 
 	!type declaration
-	type Player
+	type player
 		character(len=32) :: name
 		integer :: strength
 		integer :: intelegence
@@ -11,6 +11,14 @@ module classPlayer
 		integer :: mana
 		integer :: xp
 		integer :: score
-	end type Player
+		integer :: melee_damage
+	end type player
 
-end module classPlayer
+	! subroutine update_player_stats(this, plr)
+	! 	use class_player
+	! 	implicit none
+	! 	type(player) :: plr
+	!
+	! end subroutine update_player_stats
+
+end module class_player

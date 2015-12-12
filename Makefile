@@ -1,5 +1,10 @@
 all: dungeon
 
-dungeon: world.f95; gfortran -o dungeon world.f95 player.f95 trap.f95 dungeon_floor.f95
+dungeon:
+	gfortran -c player.f95
+	gfortran -c trap.f95
+	gfortran -c dungeon_floor.f95
+	gfortran world.f95 player.o trap.o dungeon_floor.o -o dungeon
 
-clean:; rm -f dungeon; *.mod;
+clean:
+	rm -f dungeon; rm -f *.o; rm -f *.mod;
