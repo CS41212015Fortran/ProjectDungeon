@@ -67,6 +67,14 @@ contains
     this%is_south = .FALSE.
     this%is_west = .FALSE.
     
+    !for traps secret rooms
+    this%has_trap = .FALSE.
+    this%has_treasure = .FALSE.
+    this%has_secret = .FALSE.
+    
+    !reset mob count
+    mob_count = 0;
+    
     !generate a random width potentially based on floor number
     call RANDOM_NUMBER(new_seed)  
     if (new_seed > (1 - this%direction_chance)) then
@@ -137,10 +145,22 @@ contains
       print*, "Welcome to floor ", this%floor_number, "."
     END IF
     
-    !TODO populate mobs and monsters
     
     !Output directions and instances of events, items, mobs, secret rooms, etc.
     print*, "You find yourself in a room."
+    
+    !TODO populate mobs and monsters
+    if (mob_count > 0) then
+      print "(a,$)", "There is a "
+      do i=0,mob_count
+        print "(a,$)", mobs(mob_count)
+      end do
+      print*, "here."
+    end if
+    
+    if(this%has_treasure) then
+      print*, "There is also a treasure chest."
+    end if
     
     IF (this%is_north.AND.this%is_east.AND.this%is_south.AND.this%is_west) THEN
       print*, "Possible directions are North, South, East, West."
