@@ -1,5 +1,6 @@
 module class_dungeon_floor
   use class_mob
+
 	implicit none
   private
   public :: dungeon_floor, make_new_room, get_floor_number, get_is_north, get_is_east, &
@@ -15,7 +16,7 @@ module class_dungeon_floor
     real :: trap_chance = .25				!chance that there is a trap in the room
     real :: treasure_chance = .20		!chance that there is a treasure chest in the room
     real :: secret_chance = .10			!chance that there is a secret room
-    real :: mob_chance = .05        !chance that there is a mob per mob 5 * .05 = .25
+    real :: mob_chance = .25        !chance that there is a mob per mob 5 * .05 = .25
   
     !TODO	might want to move this to a greater scope
     integer :: floor_number = 0 !number of the floor
@@ -30,9 +31,10 @@ module class_dungeon_floor
     logical :: has_trap = .FALSE.				!for the traps
     logical :: has_treasure = .FALSE.		!for the treasure
     logical :: has_secret = .FALSE.			!for the secret room
+    logical :: is_secret = .TRUE.
     
-    integer :: mob_count = 0;           !count of mobs
-    type(mob) :: mobs(5)                !array of actual mobs
+    logical   :: has_mob = .FALSE.      !if we have a mob
+    type(mob) :: mob                    !the mob
     
   end type dungeon_floor
 	
@@ -72,9 +74,10 @@ contains
     this%has_trap = .FALSE.
     this%has_treasure = .FALSE.
     this%has_secret = .FALSE.
+    this%is_secret = .FALSE.
     
     !reset mob count
-    mob_count = 0;
+    this%has_mob = .FALSE.
     
     !generate a random width potentially based on floor number
     call RANDOM_NUMBER(new_seed)  
@@ -127,14 +130,12 @@ contains
       this%has_secret = .TRUE.
     end if
     
-    !for mobs up to 5 times
-    do i=0,5
-      call RANDOM_NUMBER(new_seed)
-      if (new_seed > (1 - this%mob_chance)) then
-        mob_count = mob_count + 1
-        call new_mob(mobs(mob_count), this%floor_number)
-      end if
-    end do
+    !for mobs
+    call RANDOM_NUMBER(new_seed)
+    if (new_seed > (1 - this%mob_chance)) then
+      this%has_mob = .TRUE.
+      call new_mob(this%mob, this%floor_number)
+    end if
   
     IF (went_down) then
       !increment the floor
@@ -147,61 +148,14 @@ contains
     END IF
     
     
-    !Output directions and instances of events, items, mobs, secret rooms, etc.
-    print*, "You find yourself in a room."
-    
-    !TODO populate mobs and monsters
-    if (mob_count > 0) then
-      print "(a,$)", "There is a "
-      do i=0,mob_count
-        print "(a,$)", mobs(mob_count)
-      end do
-      print*, "here."
-    end if
-    
-    if(this%has_treasure) then
-      print*, "There is also a treasure chest."
-    end if
-    
-    IF (this%is_north.AND.this%is_east.AND.this%is_south.AND.this%is_west) THEN
-      print*, "Possible directions are North, South, East, West."
-    ELSE IF (this%is_north.AND.this%is_east.AND.this%is_south) THEN
-      print*, "Possible directions are North, East, and South."
-    ELSE IF (this%is_north.AND.this%is_east.AND.this%is_west) THEN
-      print*, "There is North, East, and West."
-    ELSE IF (this%is_north.AND.this%is_south.AND.this%is_west) THEN
-      print*, "Possible directions are North, South, and West."
-    ELSE IF (this%is_east.AND.this%is_south.AND.this%is_west) THEN
-      print*, "Possible directions are East, South and West."
-    ELSE IF (this%is_north.AND.this%is_east) THEN
-      print*, "There is both North and East."
-    ELSE IF (this%is_north.AND.this%is_south) THEN
-      print*, "You may go North or South."
-    ELSE IF (this%is_north.AND.this%is_west) THEN
-      print*, "There is North and West."
-    ELSE IF (this%is_east.AND.this%is_south) THEN
-      print*, "There is room to both the East and the South."
-    ELSE IF (this%is_east.AND.this%is_west) THEN
-      print*, "There are rooms to the East and West."
-    ELSE IF (this%is_south.AND.this%is_west) THEN
-      print*, "You may go South or East."
-    ELSE IF (this%is_north) THEN
-      print*, "You may go North."
-    ELSE IF (this%is_east) THEN
-      print*, "You may go East."
-    ELSE IF (this%is_south) THEN
-      print*, "You may go South."
-    ELSE IF (this%is_west) THEN
-      print*, "You may go West."
-    ELSE
-      !You will never get here
-    END IF
+    !output
     
   end subroutine make_new_room
 	
   
   !secret room
   subroutine make_secret_room(this) 
+    implicit none
     type(dungeon_floor) :: this
     integer :: i, n, clock
     integer, dimension(:), allocatable :: seed
@@ -233,6 +187,8 @@ contains
     this%has_treasure = .FALSE.
     this%has_secret = .FALSE.
     
+    this%is_secret = .TRUE.
+    
     !random
     call RANDOM_NUMBER(new_seed)
     
@@ -240,12 +196,76 @@ contains
       !treasure!
       this%has_treasure = .TRUE.
     else
-      this%mob_count = 1
-      call new_mob(mobs(mob_count), this%floor_number*4)
+      !bad ass mob
+      this%has_mob = .TRUE.
+      call new_mob(this%mob, this%floor_number*4)
     end if
+    
+    call examine_room(this)
     
   end subroutine make_secret_room
   
+  subroutine examine_room(this)
+    implicit none
+    type(dungeon_floor), intent(in) :: this
+    
+    if (this%is_secret) then
+      !SECRET ROOM
+      if (this%has_treasure) then
+        print *, "The room contains a valuable treasure."
+      else 
+        print *, "The room contains a", this%mob%name
+      end if
+    
+    print *, "There is also an exit. You may leave."
+    else
+      !NORMAL ROOM
+      !Output directions and instances of events, items, mobs, secret rooms, etc.
+      print*, "You find yourself in a room." 
+     
+      if(this%has_mob) then
+        print*, "You are not alone. There is a ", this%mob%name, " here."
+      end if
+      
+      if(this%has_treasure) then
+        print*, "There is also a treasure chest."
+      end if
+      
+      IF (this%is_north.AND.this%is_east.AND.this%is_south.AND.this%is_west) THEN
+        print*, "Possible directions are North, South, East, West."
+      ELSE IF (this%is_north.AND.this%is_east.AND.this%is_south) THEN
+        print*, "Possible directions are North, East, and South."
+      ELSE IF (this%is_north.AND.this%is_east.AND.this%is_west) THEN
+        print*, "There is North, East, and West."
+      ELSE IF (this%is_north.AND.this%is_south.AND.this%is_west) THEN
+        print*, "Possible directions are North, South, and West."
+      ELSE IF (this%is_east.AND.this%is_south.AND.this%is_west) THEN
+        print*, "Possible directions are East, South and West."
+      ELSE IF (this%is_north.AND.this%is_east) THEN
+        print*, "There is both North and East."
+      ELSE IF (this%is_north.AND.this%is_south) THEN
+        print*, "You may go North or South."
+      ELSE IF (this%is_north.AND.this%is_west) THEN
+        print*, "There is North and West."
+      ELSE IF (this%is_east.AND.this%is_south) THEN
+        print*, "There is room to both the East and the South."
+      ELSE IF (this%is_east.AND.this%is_west) THEN
+        print*, "There are rooms to the East and West."
+      ELSE IF (this%is_south.AND.this%is_west) THEN
+        print*, "You may go South or East."
+      ELSE IF (this%is_north) THEN
+        print*, "You may go North."
+      ELSE IF (this%is_east) THEN
+        print*, "You may go East."
+      ELSE IF (this%is_south) THEN
+        print*, "You may go South."
+      ELSE IF (this%is_west) THEN
+        print*, "You may go West."
+      ELSE
+        !You will never get here
+      END IF
+    end if
+  end subroutine examine_room
   
   !GETTERS
 	!Floor number
@@ -406,5 +426,19 @@ contains
       print*, "There is no ladder here with which to go Up."
     end if
   end subroutine go_up
+  
+  subroutine leave_secret(this)
+    implicit none
+    type(dungeon_floor), intent(in) :: this
+    
+    IF (this%is_secret) THEN
+      print*, "You leave the room."
+    
+      !destroy old room and make a regular room
+      call make_new_room(this, .FALSE.)
+    ELSE
+      print*, "You cannot leave what is not a secret room."
+    END IF
+  end subroutine leave_secret
   
 end module class_dungeon_floor

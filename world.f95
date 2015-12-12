@@ -62,32 +62,125 @@ program world
 
 	read (*,'(A)') command
 
-	main: do while(p%hp>0)
+	main: do while(.true.)
 			if(index(command, "combat") > 0) then
-				!do combat
-				read (*,'(A)') command
-				if(index(command, "attack") > 0) then
-				else if(index(command, "magic") > 0) then
-				else if(index(command, "run") > 0) then
-				else
-					print *, "I don't know what you mean by '"//command//"'"
-				end if
+				!start combat
+				combat: do while(.true.)
+					read (*,'(A)') command
+
+					! if(mob%health<=0)
+					! 	exit combat
+					! endif
+
+					if(p%hp<0)
+						exit main
+				  end if
+
+					if(index(command, "attack") > 0) then
+					else if(index(command, "magic") > 0) then
+					else if(index(command, "run") > 0) then
+						exit combat
+					else
+						print *, "I don't know what you mean by ",command
+					end if
+
+					!mob does their turn
+
+				end do combat
 				!end combat
+
+			! Go North
 		  else if(index(command, "north") > 0) then
+		  	! If the room contains a trap
+				if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_north(d)
+
+			! Go South
 		  else if(index(command, "south") > 0) then
+		  	if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_south(d)
+
+			! Go East
 		  else if(index(command, "east") > 0) then
+		  	if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_east(d)
+
+			! Go West
 		  else if(index(command, "west") > 0) then
+		  	if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_west(d)
+
+			! Move up a floor
 		  else if(index(command, "up") > 0) then
+		  	if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_up(d)
+
+			! Move down a floor
 		  else if(index(command, "down") > 0) then
+		  	if (d%has_trap) then
+					t = Trap("mine", 1)
+					call triggerTrap(t)
+					call effectPlayer(t, p, d)
+				end if
+				call go_down(d)
+
+			! Take an item
 		  else if(index(command, "take") > 0) then
+
+		  ! Check for traps
 		  else if(index(command, "check-trap") > 0) then
+
+		  ! Disarm a trap
 		  else if(index(command, "disarm-trap") > 0) then
+
+		  ! Unlock a chest if you have keys
 		  else if(index(command, "unlock") > 0) then
+		  	!If the room contains a treasure chest
+				if (d%has_treasure) then
+					print*, "There is a locked treasure chest in this room."
+					call unlockChest(c, p)
+				end if
+
+			! Buy an item from a shop
 		  else if(index(command, "buy") > 0) then
+
+		 	! Sell an item at a shop
 		  else if(index(command, "sell") > 0) then
+
+		  ! Drop an item
 		  else if(index(command, "drop") > 0) then
+
+		  ! Check your stats
 		  else if(index(command, "check-stats") > 0) then
+		  	call print_stats(p)
+
+		  ! Check your items
 		  else if(index(command, "check-item") > 0) then
+
+		  ! Look around you to gather your bearings
+		  else if(index(command, "look") > 0) then
+
+			! Quit the game
 			else if(index(command, "quit") > 0) then
 				exit main
 			else
@@ -96,31 +189,5 @@ program world
 
 		  read (*,'(A)') command
 	end do main
-print *, "Game Over: Your Final Score is ",p%score
-
-!NEW STUFF ABOVE!
-
-	call print_stats(p)
-	call make_new_room(d, .true.)
-	call go_east(d)
-
-	! If the room contains a trap
-  if (d%has_trap) then
-  	print*, "There is a trap in this room."
-  	t = Trap("mine", 1)
-  	call triggerTrap(t)
-  	call effectPlayer(t, p)
-  end if
-
-  !If the room contains a treasure chest
-  if (d%has_treasure) then
-  	print*, "There is a locked treasure chest in this room."
-  	call unlockChest(c, p)
-  end if
-
-  !If the room contains a secret room
-  if (d%has_secret) then
-  	print*, "There is a secret room somewhere here."
-  end if
-
+	print *, "Game Over: Your Final Score is ",p%score
 end program world

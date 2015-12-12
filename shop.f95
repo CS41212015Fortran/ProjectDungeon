@@ -6,8 +6,10 @@ module class_Shop
 	public :: Shop, buy_item, sell_item, check_inventory
 
 	type Shop
-		type(Item), dimension(10) :: inventory
+		
 	end type Shop
+	
+	!upper body, lower body, head, left hand, right hand
 
 contains
 	! This function is called when a player  buys an item
