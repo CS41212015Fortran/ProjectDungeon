@@ -43,30 +43,54 @@ contains
 		end if
 	end subroutine triggerTrap
 
-	subroutine effectPlayer(this, plr)
+	subroutine effectPlayer(this, plr, dungeon)
+		use class_dungeon_floor
 		use classPlayer
-
 		implicit none
+		
 		type(Trap), intent(in) :: this
 		type(Player) :: plr
-		integer :: seed = 1
+		type(dungeon_floor) :: dungeon
+		integer :: i, n, clock, irand, damage
+    integer, dimension(:), allocatable :: seed
+    real    :: rrand
+		
+		!set up random
+    call RANDOM_SEED(size = n)
+    allocate(seed(n))
+    
+    call system_clock(count = clock)
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    call RANDOM_SEED(PUT = seed)
+    deallocate(seed)
+    
+    call RANDOM_NUMBER(rrand)
+    irand = rrand / 5
 
-		if (this%trap_type .eq. 1) then
-			! if condition is true then print the following
-			print*, "The ", trim(this%trap_name), " catches your foot and injures you."
-
-			plr%hp = plr%hp - 2
-
-		else if (this%trap_type .eq. 2) then
-			! if else if condition is true
-			print*, "This is a displacement trap."
-			! Re-generate a new room.
-		else if(this%trap_type .eq. 3) then
-			! if else if condition is true
-			print*, "This is an impair trap."
-		else
-			! if none of the conditions is true
-			print*, "You stumble upon a dud trap. Whew, consider this your lucky day."
+		! Check if the player dodges the trap.
+		if (plr%dodge_chance > (irand + (dungeon%floor_number/20))) then
+			print*, " Due to your deftly abilities, you succesfully dodge the ", trim(this%trap_name), "!"
+		else		
+			if (this%trap_type .eq. 1) then			
+				else 
+					! calculate the damage
+					call RANDOM_NUMBER(rrand)
+					damage = floor(rrand * (plr%hp / 3)) + 1
+				
+					Print  "(a5,a,a22,i3,a7)",' The ', trim(this%trap_name), ' injures you. You take ', damage, ' damage.'
+				
+					! damage the player up to a third of their health
+					plr%hp = plr%hp - damage
+				end if
+			else if (this%trap_type .eq. 2) then
+				! if else if condition is true
+				print*, "You accidentally trigger trap. After a bright flash you find yourself in an unfamiliar room."
+				! generate a new room
+				make_new_room(dungeon, .false.)
+			else
+				! if none of the conditions are true
+				print*, "You stumble upon a dud trap. Whew, consider this your lucky day."
+			end if
 		end if
 	end subroutine effectPlayer
 

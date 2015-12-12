@@ -131,7 +131,7 @@ contains
       call RANDOM_NUMBER(new_seed)
       if (new_seed > (1 - this%mob_chance)) then
         mob_count = mob_count + 1
-        call new_mob(mobs(mob_count), this%floor_number)
+        !call new_mob(mobs(mob_count), this%floor_number)
       end if
     end do
   
@@ -151,11 +151,11 @@ contains
     
     !TODO populate mobs and monsters
     if (mob_count > 0) then
-      print "(a,$)", "There is a "
+      !print "(a,$)", "There is a "
       do i=0,mob_count
-        print "(a,$)", mobs(mob_count)
+        !print "(a,$)", mobs(mob_count)
       end do
-      print*, "here."
+      !print*, "here."
     end if
     
     if(this%has_treasure) then

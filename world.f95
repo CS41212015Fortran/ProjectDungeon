@@ -35,7 +35,7 @@ program world
   	print*, "There is a trap in this room."
   	t = Trap("mine", 1)
   	call triggerTrap(t)
-  	call effectPlayer(t, p)
+  	call effectPlayer(t, p, d)
   end if
   
   !If the room contains a treasure chest
