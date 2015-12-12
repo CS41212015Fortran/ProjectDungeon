@@ -31,6 +31,9 @@ module class_dungeon_floor
     logical :: has_treasure = .FALSE.		!for the treasure
     logical :: has_secret = .FALSE.			!for the secret room
     
+    integer :: mob_count = 0;           !count of mobs
+    type(mob) :: mobs(5)                !array of actual mobs
+    
   end type dungeon_floor
 	
 ! Set up the methods for the room module.
@@ -43,8 +46,6 @@ contains
     integer :: i, n, clock
     integer, dimension(:), allocatable :: seed
     real :: new_seed       ! for random functions
-    type(mob) :: mobs(5)   ! hold up to 5 mobs
-    integer   :: mob_count ! count of mobs
     
     !set up our random stuff
     call RANDOM_SEED(size = n)
@@ -142,7 +143,7 @@ contains
       !set that there is an UP ladder in the room
       this%is_up = .TRUE.
       
-      print*, "Welcome to floor ", this%floor_number, "."
+      print "(a17,i4,a1)", "Welcome to floor ", this%floor_number, "."
     END IF
     
     
@@ -196,9 +197,56 @@ contains
       !You will never get here
     END IF
     
-      
   end subroutine make_new_room
 	
+  
+  !secret room
+  subroutine make_secret_room(this) 
+    type(dungeon_floor) :: this
+    integer :: i, n, clock
+    integer, dimension(:), allocatable :: seed
+    real :: new_seed       ! for random functions
+    
+    !set up our random stuff
+    call RANDOM_SEED(size = n)
+    allocate(seed(n))
+    
+    call system_clock(count = clock)
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    call RANDOM_SEED(PUT = seed)
+    deallocate(seed)
+    
+    !no up ladders unless explicitely stated
+    this%is_up = .FALSE.
+    
+    !same for the down ladder
+    this%is_down = .FALSE.
+    
+    !reset directions
+    this%is_north = .FALSE.
+    this%is_east = .FALSE.
+    this%is_south = .FALSE.
+    this%is_west = .FALSE.
+    
+    !for traps secret rooms
+    this%has_trap = .FALSE.
+    this%has_treasure = .FALSE.
+    this%has_secret = .FALSE.
+    
+    !random
+    call RANDOM_NUMBER(new_seed)
+    
+    if (new_seed > .5) then
+      !treasure!
+      this%has_treasure = .TRUE.
+    else
+      this%mob_count = 1
+      call new_mob(mobs(mob_count), this%floor_number*4)
+    end if
+    
+  end subroutine make_secret_room
+  
+  
   !GETTERS
 	!Floor number
 	function get_floor_number(this) result (floor_number)

@@ -2,13 +2,13 @@ module class_mob
   implicit none
   
 	private
-	public :: Mob, new_mob, get_info, attack
+	public :: mob, new_mob, get_info, attack
 
-	type Mob
+	type mob
 		character (len=20) :: name
 		integer :: health
 		integer :: strength
-	end type Mob
+	end type mob
 
 	contains
 
