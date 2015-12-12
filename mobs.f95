@@ -28,9 +28,6 @@ module class_Mob
 		
 	end subroutine attack
 		
-
-
-
 end module class_Mob
 
 

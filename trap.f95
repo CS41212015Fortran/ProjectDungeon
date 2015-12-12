@@ -36,24 +36,33 @@ contains
 		implicit none
 		type(Trap) :: this
 
-		this%triggered = .true.
+		if (this%triggered .eqv. .false.) then
+			this%triggered = .true.
+		else
+			print*, "Trap has already been triggered"
+		end if
 	end subroutine triggerTrap
 
-	subroutine effectPlayer(this, plr)
+	subroutine effectPlayer(this, plr, seed)
 		use class_player
 		implicit none
 		type(Trap), intent(in) :: this
 		type(Player) :: plr
+		integer :: seed
 
 		if (this%trap_type .eq. 1) then
 			! if condition is true then print the following
 			print*, "The bear-trap catches your foot and injures you."
-			print*, "You take 2 damage."
+      
+      call srand(seed)
+      print*, int(rand()*4)+1, int(rand()*4)+1, int(rand()*4)+1, int(rand()*4)+1
+			
 			plr%hp = plr%hp - 2
 
 		else if (this%trap_type .eq. 2) then
 			! if else if condition is true
 			print*, "This is a displacement trap."
+			! Re-generate a new room.
 		else if(this%trap_type .eq. 3) then
 			! if else if condition is true
 			print*, "This is an impair trap."
@@ -66,7 +75,6 @@ contains
 	subroutine trapPrint(this)
 		implicit none
     type(Trap), intent(in) :: this
-
     print *, 'Trap: name = ', trim(this%trap_name), ' type = ', this%trap_type
   end subroutine trapPrint
 end module classTrap
