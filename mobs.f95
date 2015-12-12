@@ -35,10 +35,20 @@ module class_Mob
     deallocate(seed)
     
     call RANDOM_NUMBER(rrand)
-    irand = floor(rrand * 5)+1
+    irand = floor(rrand * 10)+1
     
     !randomly generate a name
-    if (irand == 5) then
+    if (irand == 10) then
+    	this%name = "Mummy"
+    else if (irand == 9) then
+    	this%name = "Giant Spider"
+    else if (irand == 8) then
+    	this%name = "Witch"
+    else if (irand == 7) then
+    	this%name = "Gargoyle"
+    else if (irand == 6) then
+    	this%name = "Imp"
+    else if (irand == 5) then
       this%name = "Skeleton"
     else if (irand == 4) then
       this%name = "Wraith"
