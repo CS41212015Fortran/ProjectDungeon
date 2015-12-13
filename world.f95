@@ -1,6 +1,7 @@
 program world
 	use classTrap
 	use classTreasure
+	use class_spells
 	use class_dungeon_floor
 	use classPlayer
 
@@ -36,10 +37,10 @@ program world
 	fireball%dice_roll=20
 	fireball%known    =.false.
 
-	lesser_heal%name     ="Lesser Heal"
-	lesser_heal%mana_cost=30
-	lesser_heal%dice_roll=20
-	lesser_heal%known    =.false.
+	heal%name     ="Lesser Heal"
+	heal%mana_cost=30
+	heal%dice_roll=20
+	heal%known    =.false.
 
 	print *,''
   print '(a12a32)','Good Morrow ', p%name
