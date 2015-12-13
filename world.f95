@@ -12,11 +12,8 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell) 				:: lesser_magic_missile
-	type(spell) 				:: magic_missile
-	type(spell) 				:: greater_magic_missile
-	type(spell)					:: greater_heal
-	type(spell)					:: lesser_heal
+	type(spell) 				:: fireball
+	type(spell)					:: heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
 	real 								:: rrand
@@ -35,30 +32,14 @@ program world
 	call update_derived_stats(p)
 
 	!init spellbook
-	lesser_magic_missile%name      = "Lesser Magic Missile"
-	lesser_magic_missile%mana_cost = 15
-	lesser_magic_missile%dice_roll = 5
-	lesser_magic_missile%known     = .false.
 
-	magic_missile%name      = "Magic Missile"
-	magic_missile%mana_cost = 30
-	magic_missile%dice_roll = 25
-	magic_missile%known     = .false.
+	fireball%name      = "Fireball"
+	fireball%mana_cost = 30
+	fireball%dice_roll = 40
 
-	greater_magic_missile%name      = "Greater Magic Missile"
-	greater_magic_missile%mana_cost = 60
-	greater_magic_missile%dice_roll = 125
-	greater_magic_missile%known     = .false.
-
-	lesser_heal%name      = "Lesser Heal"
-	lesser_heal%mana_cost = 30
-	lesser_heal%dice_roll = 20
-	lesser_heal%known     = .false.
-
-	greater_heal%name      = "Greater Heal"
-	greater_heal%mana_cost = 80
-	greater_heal%dice_roll = 80
-	greater_heal%known     = .false.
+	heal%name      = "Heal"
+	heal%mana_cost = 30
+	heal%dice_roll = 40
 
 	print *,''
   print *,adjustl('Good Morrow '), p%name
@@ -105,57 +86,14 @@ program world
 					end if
 
 				else if(index(command, "magic") > 0) then
-					if(lesser_magic_missile%known) then
-							print *, "Enter S to shoot a Lesser Magic Missile, enter N to look at the next spell in the spellbook"
-							read (*,'(A)') command
-							if (command.eq.'S') then
-								call apply_offensive_spell(lesser_magic_missile,p,d%mob)
-							else
-								print *, "You turn the page in your spellbook"
-							end if
-					end if
 
-					if(magic_missile%known) then
-							print *, "Enter S to shoot a Magic Missile, enter N to look at the next spell in the spellbook"
-							read (*,'(A)') command
-							if (command.eq.'S') then
-								call apply_offensive_spell(magic_missile,p,d%mob)
-							else
-								print *, "You turn the page in your spellbook"
-							end if
+					print *, "Enter F to shoot a Fireball or H to heal yourself"
+					read (*,'(A)') command
+					if (command.eq.'F' .or. command.eq.'f') then
+						call apply_offensive_spell(fireball,p,d%mob)
+					else
+						call apply_defensive_spell(heal,p)
 					end if
-
-					if (greater_magic_missile%known) then
-							print *, "Enter S to shoot a Greater Magic Missile, enter N to look at the next spell in the spellbook"
-							read (*,'(A)') command
-							if (command.eq.'S') then
-								call apply_offensive_spell(greater_magic_missile,p,d%mob)
-							else
-								print *, "You turn the page in your spellbook"
-							end if
-					end if
-
-					if(lesser_heal%known) then
-							print *, "Enter S to use Lesser Heal on yourself, enter N to look at the next spell in the spellbook"
-							read (*,'(A)') command
-							if (command.eq.'S') then
-								call apply_defensive_spell(lesser_heal,p)
-							else
-								print *, "You turn the page in your spellbook"
-							end if
-					end if
-
-					if(greater_heal%known) then
-							print *, "Enter S to use Greater Heal on yourself, enter N to look at the next spell in the spellbook"
-							read (*,'(A)') command
-							if (command.eq.'S') then
-								call apply_defensive_spell(greater_heal,p)
-							else
-								print *, "You turn the page in your spellbook"
-							end if
-					end if
-
-					print *, "You stare at the blank page and remember that you don't know any more spells"
 
 				else if(index(command, "run") > 0) then
 					print *, "You ran away from the ", d%mob%name
@@ -294,5 +232,5 @@ program world
 		read (*,'(A)') command
 	end do main
   !calculate the score
-	print *, "Game Over: Your Final Score is ",get_score(p)
+	print *,adjustl(p%name),"'s Quest has come to an end: Your Final Score is ",get_score(p)
 end program world
