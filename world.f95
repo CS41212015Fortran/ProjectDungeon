@@ -40,10 +40,10 @@ program world
 	lesser_heal%dice_roll=20
 	lesser_heal%known    =.false.
 
-	!init spellbook
+!	init spellbook
 
 	print *,''
-  print *,adjustl('Good Morrow '), p%name
+	print *,adjustl('Good Morrow '), p%name
 	print *,adjustl('Time to boost your stats')
 	print *,adjustl('You major stats are Strength, Intelegence, and Moxie')
 	print *,adjustl('Strength determines you max HP and how much damage your melee attacks will do')
@@ -72,7 +72,8 @@ program world
 					print *, "There is no mob here to fight!"
 					exit combat
 				else
-					print *, "The ", d%mob%name, " has ", d%mob%health, " health"
+					print *, "The ", trim(d%mob%name), " has ", d%mob%health, " health."
+					print "(a7 f3.2 a30)", "It has ", d%mob%dodge_chance, " chance to dodge your attack."
 					print *, "You may attack, use magic, or run away."
 				end if
 
@@ -84,15 +85,15 @@ program world
 					if(rrand > (1 - d%mob%dodge_chance)) then
 						print *, "The ", trim(d%mob%name), " dodged your attack!"
 					else
-						print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+						print *, "You attack the ", trim(d%mob%name), " for ", p%strength, " damage"
 						d%mob%health = d%mob%health - p%strength
-						print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
+						print *, "The ", trim(d%mob%name), " is now at ", d%mob%health, " health"
 					end if
 
 				else if(index(command, "magic") > 0) then
 
 				else if(index(command, "run") > 0) then
-					print *, "You ran away from the ", d%mob%name
+					print *, "You ran away from the ", trim(d%mob%name)
 					exit combat
 
 				else
@@ -100,29 +101,29 @@ program world
 				end if
 
 				if(d%mob%health<=0) then
-					print *, "You defeated the ", d%mob%name, "!"
+					print *, "You defeated the ", trim(d%mob%name), "!"
 					d%has_mob = .false.
 				 	exit combat
 
 				else
 					!mob does their turn
-					print *, "It is the ", d%mob%name, "'s turn to attack!"
+					print *, "It is the ", trim(d%mob%name), "'s turn to attack!"
 
 				    call RANDOM_NUMBER(rrand)
 				    if (rrand > (1 - p%dodge_chance)) then
 						!attack will connect
 						p%hp = p%hp - d%mob%strength
-						print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
+						print *, "You were hit by the ", trim(d%mob%name), " for ", d%mob%strength, " damage!"
 						print *, "You now have ", p%hp, " health"
 
 					else
 						!attack misses
-						print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+						print *, "You were able to dodge the ", trim(d%mob%name), "'s attack!"
 					end if
 
 					if(p%hp < 0) then
 						!killed in action
-						print *, "You were killed by the ", d%mob%name
+						print *, "You were killed by the ", trim(d%mob%name)
 						exit main
 					end if
 				end if
