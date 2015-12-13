@@ -15,6 +15,7 @@ program world
 	type(integer) :: points = 6
 	type(character) :: input
 	character(len=32) :: command
+	real :: 				rrand
 
 	!init player
 	print *,' Enter player name '
@@ -64,27 +65,61 @@ program world
 
 	main: do while(.true.)
 			if(index(command, "combat") > 0) then
+				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
 					read (*,'(A)') command
 
-					! if(mob%health<=0)
-					! 	exit combat
-					! endif
 
-					if(p%hp<0)
-						exit main
-				  end if
+					action: do while(.true.)
+						if(index(command, "attack") > 0) then
+							print *, "You choose to attack the ", mob%name, " for ", p%strength, " damage"
+							mob%health = mob%health - p%strength
+							print *, "The ", mob%name, " is now at ", mob%health, " health"
+						end if
+						else if(index(command, "magic") > 0) then
+						end if
+						else if(index(command, "run") > 0) then
+							print *, "You ran away from the ", mob%name
+							exit combat
+						end if
+						else
+							print *, "I don't know what you mean by ",command
+						end if
+					end do action
 
-					if(index(command, "attack") > 0) then
-					else if(index(command, "magic") > 0) then
-					else if(index(command, "run") > 0) then
-						exit combat
+					if(mob%health<=0) then
+						print *, "You defeated the ", mob%name, "!"
+					 	exit combat
+					endif
+
 					else
-						print *, "I don't know what you mean by ",command
-					end if
+						!mob does their turn
+						print *, "It is the ", mob%name, "'s turn to attack!"
 
-					!mob does their turn
+						
+
+					    call RANDOM_NUMBER(rrand)
+					    if (new_seed > (1 - p%dodge_chance)) then
+							!attack will connect
+							p%hp = p%hp - mob%strength
+							print *, "You were hit by the ", mob%name, " for ", mob%strength, " damage!"
+							print *, "You now have ", p%hp, " health"
+
+					    end if
+						else
+							!attack misses
+							print *, "You were able to dodge the ", mob%name, "'s attack!"
+						end if
+
+
+						if(p%hp<0)
+							!killed in action
+							print *, "You were killed by the ", mob%name
+							exit main
+						end if
+
+					end if
 
 				end do combat
 				!end combat
