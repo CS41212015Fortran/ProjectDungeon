@@ -135,6 +135,7 @@ program world
 				end if
 				call go_up(d)
 
+        exit main
 			! Move down a floor
 		  else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
@@ -189,5 +190,6 @@ program world
 
 		  read (*,'(A)') command
 	end do main
-	print *, "Game Over: Your Final Score is ",p%score
+  !calculate the score
+	print *, "Game Over: Your Final Score is ",get_score(p)
 end program world
