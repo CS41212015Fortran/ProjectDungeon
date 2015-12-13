@@ -213,7 +213,7 @@ program world
 	  	!If the room contains a treasure chest
 			if (d%has_treasure) then
 				print*, "There is a locked treasure chest in this room."
-				call unlockChest(c, p)
+				call unlockChest(c, p, d)
 			end if
 
 		! Buy an item from a shop
