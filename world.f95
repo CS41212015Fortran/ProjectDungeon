@@ -68,7 +68,7 @@ program world
 				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
-					if(d%has_mob == .FALSE.) then
+					if(d%has_mob .eqv. .FALSE.) then
 						print *, "There is no mob here to fight!"
 						exit combat
 					end if
@@ -101,7 +101,7 @@ program world
 						print *, "It is the ", d%mob%name, "'s turn to attack!"
 
 					    call RANDOM_NUMBER(rrand)
-					    if (new_seed > (1 - p%dodge_chance)) then
+					    if (rrand > (1 - p%dodge_chance)) then
 							!attack will connect
 							p%hp = p%hp - d%mob%strength
 							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
@@ -113,7 +113,7 @@ program world
 						end if
 
 
-						if(p%hp<0)
+						if(p%hp < 0) then
 							!killed in action
 							print *, "You were killed by the ", d%mob%name
 							exit main
