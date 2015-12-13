@@ -219,7 +219,7 @@ contains
         print *, "The room contains a", this%mob%name
       end if
     
-    print *, "There is also an exit. You may leave."
+      print *, "There is also an exit. You may leave."
     else
       !NORMAL ROOM
       !Output directions and instances of events, items, mobs, secret rooms, etc.
@@ -254,7 +254,7 @@ contains
       ELSE IF (this%is_east.AND.this%is_west) THEN
         print*, "There are rooms to the East and West."
       ELSE IF (this%is_south.AND.this%is_west) THEN
-        print*, "You may go South or East."
+        print*, "You may go South or West."
       ELSE IF (this%is_north) THEN
         print*, "You may go North."
       ELSE IF (this%is_east) THEN
@@ -266,6 +266,16 @@ contains
       ELSE
         !You will never get here
       END IF
+      
+      if (this%is_down.AND.this%is_up) then
+        print*, "There are also stairs here that lead up and down."
+      else if (this%is_down) then
+        print*, "There are also stairs here that lead down."
+      else if (this%is_up) then
+        print*, "There are also stairs here that go up."
+      end if  
+
+      
     end if
   end subroutine examine_room
   

@@ -71,6 +71,7 @@ contains
 		type(Trap) :: this
 		type(Player) :: plr
 		type(dungeon_floor) :: dungeon
+		
 	end subroutine checkForTrap
 
 	! This function gets called when a player triggers a trap

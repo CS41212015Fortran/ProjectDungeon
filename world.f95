@@ -12,8 +12,6 @@ program world
 	type(Treasure)			:: c
 	type(player) 				:: p
 	type(dungeon_floor) :: d
-	type(integer) :: points = 6
-	type(character) :: input
 	character(len=32) :: command
 	real :: 				rrand
 
@@ -27,6 +25,7 @@ program world
 	p%keys=1
 	p%score=0
 	p%gold=0
+	p%skill_points=6
 	call update_derived_stats(p)
 
 	print *,''
@@ -39,24 +38,7 @@ program world
 	print *,adjustl('Entering the following chacter will boost that stat by 1')
 	print *,adjustl('Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie')
 	print *,''
-
-	do while (points>0)
-		print *,'you have ',points,' point(s) remaining'
-		read *,input
-		select case (input)
-			case ('s')
-				call update_player_stats(p,'s',1)
-				points = points - 1
-			case ('i')
-	 			call update_player_stats(p,'i',1)
-				points = points - 1
-			case ('m')
-	 			call update_player_stats(p,'m',1)
-				points = points - 1
-			case default
-				print *,input,' is not a valid command'
-		end select
-	end do
+	call player_level_up(p)
 	print *,''
 
 	call make_new_room(d, .true.)
@@ -76,13 +58,10 @@ program world
 							print *, "You choose to attack the ", mob%name, " for ", p%strength, " damage"
 							mob%health = mob%health - p%strength
 							print *, "The ", mob%name, " is now at ", mob%health, " health"
-						end if
 						else if(index(command, "magic") > 0) then
-						end if
 						else if(index(command, "run") > 0) then
 							print *, "You ran away from the ", mob%name
 							exit combat
-						end if
 						else
 							print *, "I don't know what you mean by ",command
 						end if
@@ -99,7 +78,6 @@ program world
 					else
 						!mob does their turn
 						print *, "It is the ", mob%name, "'s turn to attack!"
-
 					    call RANDOM_NUMBER(rrand)
 					    if (new_seed > (1 - p%dodge_chance)) then
 							!attack will connect
@@ -112,16 +90,12 @@ program world
 							!attack misses
 							print *, "You were able to dodge the ", mob%name, "'s attack!"
 						end if
-
-
 						if(p%hp<0)
 							!killed in action
 							print *, "You were killed by the ", mob%name
 							exit main
 						end if
-
 					end if
-
 				end do combat
 				!end combat
 
@@ -166,10 +140,60 @@ program world
 				end if
 				call go_up(d)
 
+        exit main
 			! Move down a floor
 		  else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				c
+			call go_down(d)
+
+			! Take an item
+		  else if(index(command, "take") > 0) then
+
+		  ! Check for traps
+		  else if(index(command, "check-trap") > 0) then
+
+		  ! Disarm a trap
+		  else if(index(command, "disarm-trap") > 0) then
+
+		  ! Unlock a chest if you have keys
+		  else if(index(command, "unlock") > 0) then
+		  	!If the room contains a treasure chest
+				if (d%has_treasure) then
+					print*, "There is a locked treasure chest in this room."
+					call unlockChest(c, p)
+				end if
+
+			! Buy an item from a shop
+		  else if(index(command, "buy") > 0) then
+
+		 	! Sell an item at a shop
+		  else if(index(command, "sell") > 0) then
+
+		  ! Drop an item
+		  else if(index(command, "drop") > 0) then
+
+		  ! Check your stats
+		  else if(index(command, "check-stats") > 0) then
+		  	call print_stats(p)
+
+		  ! Check your items
+		  else if(index(command, "check-item") > 0) then
+
+		  ! Look around you to gather your bearings
+		  else if(index(command, "look") > 0) then
+
+			! Quit the game
+			else if(index(command, "quit") > 0) then
+				exit main
+			else
+				print *, "I don't know what you mean by ",command
+			end if
+
+		  read (*,'(A)') command
+	end do main
+  !calculate the score
+	print *, "Game Over: Your Final Score is ",get_score(p)
+end program world
