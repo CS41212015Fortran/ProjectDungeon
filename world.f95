@@ -3,7 +3,6 @@ program world
 	use classTreasure
 	use class_dungeon_floor
 	use classPlayer
-	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -12,7 +11,7 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell) 				:: fireball
+	type(spell)					:: fireball
 	type(spell)					:: heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
@@ -32,13 +31,15 @@ program world
 	call update_derived_stats(p)
 
 	!init spellbook
-	fireball%name      = "Fireball"
-	fireball%mana_cost = 30
-	fireball%dice_roll = 40
+	fireball%name     ="Fireball"
+	fireball%mana_cost=30
+	fireball%dice_roll=20
+	fireball%known    =.false.
 
-	heal%name      = "Heal"
-	heal%mana_cost = 30
-	heal%dice_roll = 40
+	lesser_heal%name     ="Lesser Heal"
+	lesser_heal%mana_cost=30
+	lesser_heal%dice_roll=20
+	lesser_heal%known    =.false.
 
 	print *,''
   print '(a12a32)','Good Morrow ', p%name
@@ -58,6 +59,7 @@ program world
 	read (*,'(A)') command
 
 	main: do while(.true.)
+
 		if(index(command, "combat") > 0) then
 			! TODO Should Mobs have moxie?  To see who gets the initiative
 			!start combat
@@ -74,18 +76,10 @@ program world
 				read (*,'(A)') command
 
 				if(index(command, "attack") > 0) then
-
-					call RANDOM_NUMBER(rrand)
-					if(rrand > (1 - d%mob%dodge_chance)) then
-						print *, "The ", trim(d%mob%name), " dodged your attack!"
-					else
-						print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
-						d%mob%health = d%mob%health - p%strength
-						print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
-					end if
-
+					print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+					d%mob%health = d%mob%health - p%strength
+					print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
 				else if(index(command, "magic") > 0) then
-
 					print *, "Enter F to shoot a Fireball or H to heal yourself"
 					read (*,'(A)') command
 					if (command.eq.'F' .or. command.eq.'f') then
@@ -93,10 +87,10 @@ program world
 					else
 						call apply_defensive_spell(heal,p)
 					end if
-
 				else if(index(command, "run") > 0) then
 					print *, "You ran away from the ", d%mob%name
 					exit combat
+
 				else
 					print *, "I don't know what you mean by ",command
 				end if
@@ -118,8 +112,26 @@ program world
 						print *, "You now have ", p%hp, " health"
 
 					else
-						!attack misses
-						print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+						!mob does their turn
+						print *, "It is the ", d%mob%name, "'s turn to attack!"
+
+					    call RANDOM_NUMBER(rrand)
+					    if (rrand > (1 - p%dodge_chance)) then
+							!attack will connect
+							p%hp = p%hp - d%mob%strength
+							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
+							print *, "You now have ", p%hp, " health"
+
+						else
+							!attack misses
+							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+						end if
+
+						if(p%hp < 0) then
+							!killed in action
+							print *, "You were killed by the ", d%mob%name
+							exit main
+						end if
 					end if
 
 					if(p%hp < 0) then
@@ -231,5 +243,5 @@ program world
 		read (*,'(A)') command
 	end do main
   !calculate the score
-	print *,adjustl(p%name),"'s Quest has come to an end: Your Final Score is ",get_score(p)
+	print *, p%name,"'s Quest has come to an end: Your Final Score is ",get_score(p)
 end program world
