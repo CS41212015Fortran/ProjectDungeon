@@ -216,7 +216,7 @@ contains
       if (this%has_treasure) then
         print *, "The room contains a valuable treasure."
       else 
-        print *, "The room contains a", this%mob%name
+        print *, "The room contains a", trim(this%mob%name)
       end if
     
       print *, "There is also an exit. You may leave."
@@ -226,7 +226,7 @@ contains
       print*, "You find yourself in a room." 
      
       if(this%has_mob) then
-        print*, "You are not alone. There is a ", this%mob%name, " here."
+        print*, "You are not alone. There is a ", trim(this%mob%name), " here."
       end if
       
       if(this%has_treasure) then

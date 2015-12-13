@@ -11,8 +11,8 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell)					:: fireball
-	type(spell)					:: lesser_heal
+	!type(spell)					:: fireball
+	!type(spell)					:: lesser_heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
 	real 								:: rrand
@@ -30,15 +30,15 @@ program world
 	p%skill_points=6
 	call update_derived_stats(p)
 
-	fireball%name     ="Fireball"
-	fireball%mana_cost=30
-	fireball%dice_roll=20
-	fireball%known    =.false.
+	!fireball%name     ="Fireball"
+	!fireball%mana_cost=30
+	!fireball%dice_roll=20
+	!fireball%known    =.false.
 
-	lesser_heal%name     ="Lesser Heal"
-	lesser_heal%mana_cost=30
-	lesser_heal%dice_roll=20
-	lesser_heal%known    =.false.
+	!lesser_heal%name     ="Lesser Heal"
+	!lesser_heal%mana_cost=30
+	!lesser_heal%dice_roll=20
+	!lesser_heal%known    =.false.
 
 	!init spellbook
 
@@ -72,20 +72,20 @@ program world
 					print *, "There is no mob here to fight!"
 					exit combat
 				else
-					print *, "The ", d%mob%name, " has ", d%mob%health, " health"
+					print *, "The ", trim(d%mob%name), " has ", d%mob%health, " health"
 					print *, "You may attack, use magic, or run away."
 				end if
 
 				read (*,'(A)') command
 			
 				if(index(command, "attack") > 0) then
-					print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+					print *, "You choose to attack the ", trim(d%mob%name), " for ", p%strength, " damage"
 					d%mob%health = d%mob%health - p%strength
 					print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
 				else if(index(command, "magic") > 0) then
 
 				else if(index(command, "run") > 0) then
-					print *, "You ran away from the ", d%mob%name
+					print *, "You ran away from the ", trim(d%mob%name)
 					exit combat
 
 				else
@@ -93,19 +93,19 @@ program world
 				end if
 
 				if(d%mob%health<=0) then
-					print *, "You defeated the ", d%mob%name, "!"
+					print *, "You defeated the ", trim(d%mob%name), "!"
 					d%has_mob = .false.
 				 	exit combat
 
 				else
 					!mob does their turn
-					print *, "It is the ", d%mob%name, "'s turn to attack!"
+					print *, "It is the ", trim(d%mob%name), "'s turn to attack!"
 
 				    call RANDOM_NUMBER(rrand)
 				    if (rrand > (1 - p%dodge_chance)) then
 						!attack will connect
 						p%hp = p%hp - d%mob%strength
-						print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
+						print *, "You were hit by the ", trim(d%mob%name) , " for ", d%mob%strength, " damage!"
 						print *, "You now have ", p%hp, " health"
 
 					else
@@ -116,17 +116,17 @@ program world
 					    if (rrand > (1 - p%dodge_chance)) then
 							!attack will connect
 							p%hp = p%hp - d%mob%strength
-							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
+							print *, "You were hit by the ", trim(d%mob%name), " for ", d%mob%strength, " damage!"
 							print *, "You now have ", p%hp, " health"
 
 						else
 							!attack misses
-							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+							print *, "You were able to dodge the ", trim(d%mob%name), "'s attack!"
 						end if
 
 						if(p%hp < 0) then
 							!killed in action
-							print *, "You were killed by the ", d%mob%name
+							print *, "You were killed by the ", trim(d%mob%name)
 							exit main
 						end if
 					end if
