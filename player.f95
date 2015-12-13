@@ -14,6 +14,7 @@ module classPlayer
 		integer :: hp_max
 		integer :: mana
 		integer :: xp
+		integer :: skill_points
 		integer :: score
 		integer :: melee_damage
 		integer :: keys
@@ -36,6 +37,30 @@ module classPlayer
 			bool = .false.
 		end if
 	end function has_key
+
+	subroutine player_level_up(this)
+		implicit none
+		type(Player), intent(inout) :: this
+		type(character) :: input
+		
+		do while (this%skill_points>0)
+			print *,'you have ',this%skill_points,' skill point(s) remaining'
+			read *,input
+			select case (input)
+				case ('s')
+					call update_player_stats(this,'s',1)
+					this%skill_points = this%skill_points - 1
+				case ('i')
+		 			call update_player_stats(this,'i',1)
+					this%skill_points = this%skill_points - 1
+				case ('m')
+		 			call update_player_stats(this,'m',1)
+					this%skill_points = this%skill_points - 1
+				case default
+					print *,input,' is not a valid command'
+			end select
+		end do
+	end subroutine player_level_up
 
 	subroutine update_player_stats(this,c,i)
 		implicit none
@@ -83,6 +108,7 @@ module classPlayer
 		Print  "(a14,i10)",'MANA        = ',this%mana
 		Print  "(a14,i10)",'KEYS        = ',this%keys
 		Print  "(a14,i10)",'GOLD        = ',this%gold
+		Print  "(a14,i10)",'SKILL POINTS= ',this%skill_points
 	end subroutine short_stats
 
 	subroutine print_stats(this)
@@ -103,6 +129,7 @@ module classPlayer
 		Print  "(a14,i10)",'KEYS        = ',this%keys
 		Print  "(a14,i10)",'GOLD        = ',this%gold
 		Print  "(a14,i10)",'XP          = ',this%xp
+		Print  "(a14,i10)",'SKILL POINTS= ',this%skill_points
 		Print  "(a14,i10)",'SCORE       = ',this%score
 
 	end subroutine print_stats

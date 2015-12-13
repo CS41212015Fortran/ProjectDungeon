@@ -1,5 +1,5 @@
 GFORTRAN module version '10' created from player.f95
-MD5:ff9a68f90e4725bcd4b7c4c5c42c0737 -- If you edit this, you'll get what you deserve.
+MD5:8254b541707cd64ec525c8557420302b -- If you edit this, you'll get what you deserve.
 
 (() () () () () () () () () () () () () () () () () () () () () () () ()
 () () ())
@@ -46,44 +46,52 @@ UNKNOWN-FL UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0)
 UNKNOWN-ACCESS ()) (17 'perception_chance' (REAL 4 0 0 0 REAL ()) () (
 UNKNOWN-FL UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0)
 UNKNOWN-ACCESS ())) PUBLIC (() () () ()) () 0 0 5438247)
-18 'has_key' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
-DECL UNKNOWN 0 0 FUNCTION IMPLICIT_PURE) (LOGICAL 4 0 0 0 LOGICAL ()) 19
-0 (20) () 21 () () () 0 0)
-22 'player' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT UNKNOWN-PROC
+18 'get_score' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN 0 0 FUNCTION) (INTEGER 4 0 0 0 INTEGER ()) 19 0 (20) () 21
+() () () 0 0)
+22 'has_key' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN 0 0 FUNCTION IMPLICIT_PURE) (LOGICAL 4 0 0 0 LOGICAL ()) 23
+0 (24) () 25 () () () 0 0)
+26 'player' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT UNKNOWN-PROC
 DECL UNKNOWN 0 0 FUNCTION GENERIC) (UNKNOWN 0 0 0 0 UNKNOWN ()) 0 0 () ()
 0 () () () 0 0)
-23 'print_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
-MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 24
-0 (25) () 0 () () () 0 0)
-26 'short_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
-MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 27
-0 (28) () 0 () () () 0 0)
-29 'update_derived_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
+27 'print_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
+MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 28
+0 (29) () 0 () () () 0 0)
+30 'short_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
+MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 31
+0 (32) () 0 () () () 0 0)
+33 'update_derived_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
 MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE IMPLICIT_PURE) (UNKNOWN 0 0 0 0
-UNKNOWN ()) 30 0 (31) () 0 () () () 0 0)
-32 'update_player_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
-MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 33
-0 (34 35 36) () 0 () () () 0 0)
-20 'this' '' '' 19 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
+UNKNOWN ()) 34 0 (35) () 0 () () () 0 0)
+36 'update_player_stats' 'classplayer' '' 1 ((PROCEDURE UNKNOWN-INTENT
+MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE) (UNKNOWN 0 0 0 0 UNKNOWN ()) 37
+0 (38 39 40) () 0 () () () 0 0)
+20 'this' '' '' 19 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN 0 0 DUMMY) (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
+21 'score' '' '' 19 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN 0 0 RESULT) (INTEGER 4 0 0 0 INTEGER ()) 0 0 () () 0 () () () 0
+0)
+24 'this' '' '' 23 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
 (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
-21 'bool' '' '' 19 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+25 'bool' '' '' 23 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
 UNKNOWN 0 0 RESULT) (LOGICAL 4 0 0 0 LOGICAL ()) 0 0 () () 0 () () () 0
 0)
-25 'this' '' '' 24 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
+29 'this' '' '' 28 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
 (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
-28 'this' '' '' 27 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
+32 'this' '' '' 31 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY)
 (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
-31 'this' '' '' 30 ((VARIABLE INOUT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0
+35 'this' '' '' 34 ((VARIABLE INOUT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0
 DUMMY) (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
-34 'this' '' '' 33 ((VARIABLE INOUT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0
+38 'this' '' '' 37 ((VARIABLE INOUT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0
 DUMMY) (DERIVED 2 0 0 0 DERIVED ()) 0 0 () () 0 () () () 0 0)
-35 'c' '' '' 33 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY) (
+39 'c' '' '' 37 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY) (
 CHARACTER 1 0 0 0 CHARACTER ((CONSTANT (INTEGER 4 0 0 0 INTEGER ()) 0 '1')))
 0 0 () () 0 () () () 0 0)
-36 'i' '' '' 33 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY) (
+40 'i' '' '' 37 ((VARIABLE IN UNKNOWN-PROC UNKNOWN UNKNOWN 0 0 DUMMY) (
 INTEGER 4 0 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
 )
 
-('Player' 0 2 'has_key' 0 18 'player' 0 22 'print_stats' 0 23
-'short_stats' 0 26 'update_derived_stats' 0 29 'update_player_stats' 0
-32)
+('Player' 0 2 'get_score' 0 18 'has_key' 0 22 'player' 0 26 'print_stats'
+0 27 'short_stats' 0 30 'update_derived_stats' 0 33 'update_player_stats'
+0 36)
