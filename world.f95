@@ -79,9 +79,16 @@ program world
 				read (*,'(A)') command
 			
 				if(index(command, "attack") > 0) then
-					print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
-					d%mob%health = d%mob%health - p%strength
-					print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
+					
+					call RANDOM_NUMBER(rrand)
+					if(rrand > (1 - d%mob%dodge_chance)) then
+						print *, "The ", trim(d%mob%name), " dodged your attack!"
+					else
+						print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+						d%mob%health = d%mob%health - p%strength
+						print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
+					end if
+
 				else if(index(command, "magic") > 0) then
 
 				else if(index(command, "run") > 0) then
