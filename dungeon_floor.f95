@@ -149,6 +149,7 @@ contains
     
     
     !output
+    call examine_room(this)
     
   end subroutine make_new_room
 	
@@ -201,6 +202,7 @@ contains
       call new_mob(this%mob, this%floor_number*4)
     end if
     
+    !output
     call examine_room(this)
     
   end subroutine make_secret_room
