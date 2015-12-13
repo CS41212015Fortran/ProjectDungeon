@@ -8,6 +8,7 @@ module class_mob
 		character (len=20) :: name
 		integer :: health
 		integer :: strength
+		real    :: dodge_chance
 	end type mob
 
 	contains
@@ -66,7 +67,12 @@ module class_mob
     !strength
     irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale)
     this%strength = irand
-    
+
+	call RANDOM_NUMBER(rrand)
+	!dodge
+	this%dodge_chance = rrand
+
+
   end subroutine new_mob
   
 	subroutine get_info(this)

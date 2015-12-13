@@ -36,6 +36,7 @@ program world
 	fireball%name      = "Fireball"
 	fireball%mana_cost = 30
 	fireball%dice_roll = 40
+>>>>>>> eff8bf94530f1817ccb2766706d572d3a8034788
 
 	heal%name      = "Heal"
 	heal%mana_cost = 30

@@ -1,7 +1,11 @@
 module class_spells
+	use class_dungeon_floor
+	use class_Mob
+	use classPlayer
+
 	implicit none
 	private
-	public :: Spell
+	public :: Spell, apply_offensive_spell, apply_defensive_spell
 
 type Spell
   character(len=32) :: name
@@ -29,11 +33,11 @@ contains
     deallocate(seed)
 
     call RANDOM_NUMBER(rrand)
-    dice = ((modulo(rrand, this%dice_roll)+1)+ceiling(real(p%intelegence/2)))
+    dice = ((modulo(rrand, real(this%dice_roll))+1)+ceiling(real(p%intelegence/2)))
 
 		if ((p%mana-this%mana_cost)>=0) then !check to see if the player has enough mana for the spell
 			m%health=m%health-dice
-			p%mana = p%mana - p%mana_cost
+			p%mana = p%mana - this%mana_cost
 			print *,'You do ',dice,' damage to the ',m%name
 		else
 			print *,'Out of mana'
@@ -58,12 +62,12 @@ contains
     deallocate(seed)
 
     call RANDOM_NUMBER(rrand)
-    dice = ((modulo(rrand, this%dice_roll)+1)+ceiling(real(p%intelegence/2)))
+    dice = ((modulo(rrand, real(this%dice_roll))+1)+ceiling(real(p%intelegence/2)))
 
 		if ((p%mana-this%mana_cost)>=0) then !check to see if the player has enough mana for the spell
 			if(p%hp+dice<=p%hp) then !heal the player by dice ammount if the player doesnt go over max hp
 				p%hp=p%hp+dice
-				p%mana = p%mana - p%mana_cost
+				p%mana = p%mana - this%mana_cost
 				print *,'You heal yourelf +',dice,' HP'
 			else
 				print *,'You are too healthy to use this spell'
