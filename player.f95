@@ -1,7 +1,8 @@
 module classPlayer
 	implicit none
 	private
-	public :: Player,update_player_stats,update_derived_stats,print_stats,has_key,short_stats
+	public :: Player,update_player_stats,update_derived_stats,print_stats, &
+            has_key,short_stats,get_score
 
 	!type declaration
 	type Player
@@ -106,4 +107,20 @@ module classPlayer
 
 	end subroutine print_stats
 
+  function get_score(this) result (score)
+    implicit none
+    type(Player) :: this
+    integer :: score !score
+    score = 0
+    
+    score = score + this%hp
+    score = score + this%mana 
+    score = score + this%gold * 1000
+    score = score + this%keys * 100
+    score = score + this%strength * 150
+    score = score + this%intelegence * 150
+    score = score + this%moxie * 150
+      
+  end function get_score
+  
 end module classPlayer
