@@ -68,62 +68,57 @@ program world
 				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
-					read (*,'(A)') command
+					if(d%has_mob == .FALSE.) then
+						print *, "There is no mob here to fight!"
+						exit combat
+					end if
 
+					read (*,'(A)') command
 
 					action: do while(.true.)
 						if(index(command, "attack") > 0) then
-							print *, "You choose to attack the ", mob%name, " for ", p%strength, " damage"
-							mob%health = mob%health - p%strength
-							print *, "The ", mob%name, " is now at ", mob%health, " health"
-						end if
+							print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+							d%mob%health = d%mob%health - p%strength
+							print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
+						
 						else if(index(command, "magic") > 0) then
-						end if
+
 						else if(index(command, "run") > 0) then
-							print *, "You ran away from the ", mob%name
+							print *, "You ran away from the ", d%mob%name
 							exit combat
-						end if
+
 						else
 							print *, "I don't know what you mean by ",command
 						end if
 					end do action
 
-					if(mob%health<=0) then
-						print *, "You defeated the ", mob%name, "!"
+					if(d%mob%health<=0) then
+						print *, "You defeated the ", d%mob%name, "!"
 					 	exit combat
-					endif
-					if (p%hp<0) then
-						exit main
-				  end if
 
 					else
 						!mob does their turn
-						print *, "It is the ", mob%name, "'s turn to attack!"
-
-						
+						print *, "It is the ", d%mob%name, "'s turn to attack!"
 
 					    call RANDOM_NUMBER(rrand)
 					    if (new_seed > (1 - p%dodge_chance)) then
 							!attack will connect
-							p%hp = p%hp - mob%strength
-							print *, "You were hit by the ", mob%name, " for ", mob%strength, " damage!"
+							p%hp = p%hp - d%mob%strength
+							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
 							print *, "You now have ", p%hp, " health"
 
-					    end if
 						else
 							!attack misses
-							print *, "You were able to dodge the ", mob%name, "'s attack!"
+							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
 						end if
 
 
 						if(p%hp<0)
 							!killed in action
-							print *, "You were killed by the ", mob%name
+							print *, "You were killed by the ", d%mob%name
 							exit main
 						end if
-
 					end if
-
 				end do combat
 				!end combat
 
