@@ -240,7 +240,7 @@ program world
 
 		! display help
 		else if(index(command, "help") > 0) then
-			print *, "Valid Commands: 'combat' 'up' 'down' 'north' 'south' 'east' 'west' 'check-stats' 'look' 'unlock' 'distarm-trap' 'check-trap' 'quit'"
+			print *, "Valid Commands: combat up down north south east west check-stats look unlock distarm-trap check-trap quit"
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
