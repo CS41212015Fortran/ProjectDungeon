@@ -116,26 +116,8 @@ program world
 						print *, "You now have ", p%hp, " health"
 
 					else
-						!mob does their turn
-						print *, "It is the ", d%mob%name, "'s turn to attack!"
-
-					    call RANDOM_NUMBER(rrand)
-					    if (rrand > (1 - p%dodge_chance)) then
-							!attack will connect
-							p%hp = p%hp - d%mob%strength
-							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
-							print *, "You now have ", p%hp, " health"
-
-						else
-							!attack misses
-							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
-						end if
-
-						if(p%hp < 0) then
-							!killed in action
-							print *, "You were killed by the ", d%mob%name
-							exit main
-						end if
+						!attack misses
+						print *, "You were able to dodge the ", d%mob%name, "'s attack!"
 					end if
 
 					if(p%hp < 0) then
