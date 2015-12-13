@@ -11,7 +11,10 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell)					:: fireball
+	type(spell) 				:: lesser_magic_missile
+	type(spell) 				:: magic_missile
+	type(spell) 				:: greater_magic_missile
+	type(spell)					:: greater_heal
 	type(spell)					:: lesser_heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
@@ -30,17 +33,31 @@ program world
 	p%skill_points=6
 	call update_derived_stats(p)
 
-	fireball%name     ="Fireball"
-	fireball%mana_cost=30
-	fireball%dice_roll=20
-	fireball%known    =.false.
-
-	lesser_heal%name     ="Lesser Heal"
-	lesser_heal%mana_cost=30
-	lesser_heal%dice_roll=20
-	lesser_heal%known    =.false.
-
 	!init spellbook
+	lesser_magic_missile%name      = "Lesser Magic Missile"
+	lesser_magic_missile%mana_cost = 15
+	lesser_magic_missile%dice_roll = 5
+	lesser_magic_missile%known     = .false.
+
+	magic_missile%name      = "Magic Missile"
+	magic_missile%mana_cost = 30
+	magic_missile%dice_roll = 25
+	magic_missile%known     = .false.
+
+	greater_magic_missile%name      = "Greater Magic Missile"
+	greater_magic_missile%mana_cost = 60
+	greater_magic_missile%dice_roll = 125
+	greater_magic_missile%known     = .false.
+
+	lesser_heal%name      = "Lesser Heal"
+	lesser_heal%mana_cost = 30
+	lesser_heal%dice_roll = 20
+	lesser_heal%known     = .false.
+
+	greater_heal%name      = "Greater Heal"
+	greater_heal%mana_cost = 80
+	greater_heal%dice_roll = 80
+	greater_heal%known     = .false.
 
 	print *,''
   print *,adjustl('Good Morrow '), p%name
@@ -57,8 +74,6 @@ program world
 
 	call make_new_room(d, .true.)
 
-	
-
 	read (*,'(A)') command
 
 	main: do while(.true.)
@@ -66,7 +81,6 @@ program world
 				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
-
 
 					if(d%has_mob .eqv. .FALSE.) then
 						print *, "There is no mob here to fight!"
@@ -83,6 +97,58 @@ program world
 							d%mob%health = d%mob%health - p%strength
 							print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
 						else if(index(command, "magic") > 0) then
+
+							if(lesser_magic_missile%known) then
+									print *, "Enter S to shoot a Lesser Magic Missile, enter N to look at the next spell in the spellbook"
+									read (*,'(A)') command
+									if (command.eq.'S') then
+										call apply_offensive_spell(lesser_magic_missile,p,d%mob)
+									else
+										print *, "You turn the page in your spellbook"
+									end if
+							end if
+
+							if(magic_missile%known) then
+									print *, "Enter S to shoot a Magic Missile, enter N to look at the next spell in the spellbook"
+									read (*,'(A)') command
+									if (command.eq.'S') then
+										call apply_offensive_spell(magic_missile,p,d%mob)
+									else
+										print *, "You turn the page in your spellbook"
+									end if
+							end if
+
+							if (greater_magic_missile%known) then
+									print *, "Enter S to shoot a Greater Magic Missile, enter N to look at the next spell in the spellbook"
+									read (*,'(A)') command
+									if (command.eq.'S') then
+										call apply_offensive_spell(greater_magic_missile,p,d%mob)
+									else
+										print *, "You turn the page in your spellbook"
+									end if
+							end if
+
+							if(lesser_heal%known) then
+									print *, "Enter S to use Lesser Heal on yourself, enter N to look at the next spell in the spellbook"
+									read (*,'(A)') command
+									if (command.eq.'S') then
+										call apply_defensive_spell(lesser_heal,p)
+									else
+										print *, "You turn the page in your spellbook"
+									end if
+							end if
+
+							if(greater_heal%known) then
+									print *, "Enter S to use Greater Heal on yourself, enter N to look at the next spell in the spellbook"
+									read (*,'(A)') command
+									if (command.eq.'S') then
+										call apply_defensive_spell(greater_heal,p)
+									else
+										print *, "You turn the page in your spellbook"
+									end if
+							end if
+
+							print *, "You stare at the blank page and remember that you don't know any more spells"
 
 						else if(index(command, "run") > 0) then
 							print *, "You ran away from the ", d%mob%name
