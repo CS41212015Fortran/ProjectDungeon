@@ -35,15 +35,43 @@ contains
 
 	! Called when the player attemps to disarm the trap
 	subroutine disarmTrap(this)
+		use classPlayer
 		implicit none
 		type(Trap) :: this
+		type(Player) :: plr
+		type(dungeon_floor) :: dungeon
+		integer :: i, n, clock, irand
+    integer, dimension(:), allocatable :: seed
+    real    :: rrand
+
+		!set up random
+    call RANDOM_SEED(size = n)
+    allocate(seed(n))
+    
+    call system_clock(count = clock)
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    call RANDOM_SEED(PUT = seed)
+    deallocate(seed)
+    
+    call RANDOM_NUMBER(rrand)
+    irand = rrand / 5
 
 		if (this%triggered .eqv. .false.) then
-			
+			if (plr%dodge_chance > (irand + (dungeon%floor_number/20))) then
+			else
+			end if
 		else
 			print*, "Trap has already been triggered. You can't disarm it!"
 		end if
 	end subroutine disarmTrap
+
+	subroutine checkForTrap(this, plr, dungeon) 
+		use classPlayer
+		implicit none
+		type(Trap) :: this
+		type(Player) :: plr
+		type(dungeon_floor) :: dungeon
+	end subroutine checkForTrap
 
 	! This function gets called when a player triggers a trap
 	subroutine triggerTrap(this, plr, dungeon)
@@ -69,7 +97,6 @@ contains
     irand = rrand / 5
 
 		if (this%triggered .eqv. .false.) then
-			
 			this%triggered = .true.
 		else
 			print*, "Trap has already been triggered"
@@ -81,7 +108,7 @@ contains
 		use classPlayer
 		implicit none
 		
-		type(Trap), intent(in) :: this
+		type(Trap) :: this
 		type(Player) :: plr
 		type(dungeon_floor) :: dungeon
 		integer :: i, n, clock, irand, damage
@@ -99,6 +126,8 @@ contains
     
     call RANDOM_NUMBER(rrand)
     irand = rrand / 5
+		
+		this%triggered = .true.
 		
 		! Check if the player dodges the trap.
 		if (plr%dodge_chance > (irand + (dungeon%floor_number/20)) .OR. (this%triggered .eqv. .false.)) then
@@ -128,6 +157,6 @@ contains
 	subroutine trapPrint(this)
 		implicit none
     type(Trap), intent(in) :: this
-    print *, 'Trap: name = ', trim(this%trap_name), ' type = ', this%trap_type
+    print *, 'Trap: name = ', trim(this%trap_name)
   end subroutine trapPrint
 end module classTrap

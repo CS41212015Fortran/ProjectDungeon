@@ -100,8 +100,6 @@ program world
 						!mob does their turn
 						print *, "It is the ", mob%name, "'s turn to attack!"
 
-						
-
 					    call RANDOM_NUMBER(rrand)
 					    if (new_seed > (1 - p%dodge_chance)) then
 							!attack will connect
@@ -132,7 +130,6 @@ program world
 		  	! If the room contains a trap
 				if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_north(d)
@@ -141,7 +138,6 @@ program world
 		  else if(index(command, "south") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p , d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_south(d)
@@ -150,7 +146,6 @@ program world
 		  else if(index(command, "east") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_east(d)
@@ -159,7 +154,6 @@ program world
 		  else if(index(command, "west") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_west(d)
@@ -168,7 +162,6 @@ program world
 		  else if(index(command, "up") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_up(d)
@@ -177,7 +170,6 @@ program world
 		  else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				c
