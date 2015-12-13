@@ -8,8 +8,6 @@ module class_Shop
 	type Shop
 		
 	end type Shop
-	
-	!upper body, lower body, head, left hand, right hand
 
 contains
 	! This function is called when a player  buys an item

@@ -83,14 +83,3 @@ module class_mob
 	end subroutine get_info
     
 end module class_Mob
-
-!program mob_test
-!	use class_Mob
-!	implicit none
-!
-!	type(Mob) :: e 		! create a mob
-!
-!	call new_mob(e, 4)
-!	call get_info(e)
-!
-!end program mob_test

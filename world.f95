@@ -116,8 +116,26 @@ program world
 						print *, "You now have ", p%hp, " health"
 
 					else
-						!attack misses
-						print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+						!mob does their turn
+						print *, "It is the ", d%mob%name, "'s turn to attack!"
+
+					    call RANDOM_NUMBER(rrand)
+					    if (rrand > (1 - p%dodge_chance)) then
+							!attack will connect
+							p%hp = p%hp - d%mob%strength
+							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
+							print *, "You now have ", p%hp, " health"
+
+						else
+							!attack misses
+							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
+						end if
+
+						if(p%hp < 0) then
+							!killed in action
+							print *, "You were killed by the ", d%mob%name
+							exit main
+						end if
 					end if
 
 					if(p%hp < 0) then
@@ -134,7 +152,6 @@ program world
 		  	! If the room contains a trap
 				if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_north(d)
@@ -143,7 +160,6 @@ program world
 		else if(index(command, "south") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p , d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_south(d)
@@ -152,7 +168,6 @@ program world
 		else if(index(command, "east") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_east(d)
@@ -161,7 +176,6 @@ program world
 		else if(index(command, "west") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_west(d)
@@ -170,7 +184,6 @@ program world
 		else if(index(command, "up") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_up(d)
@@ -181,27 +194,28 @@ program world
 		else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
-				call go_down(d)
+			call go_down(d)
 
 		! Take an item
 		else if(index(command, "take") > 0) then
-
-		! Check for traps
-		else if(index(command, "check-trap") > 0) then
-
-		! Disarm a trap
-		else if(index(command, "disarm-trap") > 0) then
-
-		! Unlock a chest if you have keys
-		else if(index(command, "unlock") > 0) then
-		  	!If the room contains a treasure chest
-				if (d%has_treasure) then
-					print*, "There is a locked treasure chest in this room."
-					call unlockChest(c, p)
-				end if
+	
+	  ! Check for traps
+	  else if(index(command, "check-trap") > 0) then
+			call checkForTrap(t, p, d)
+			
+	  ! Disarm a trap
+	  else if(index(command, "disarm-trap") > 0) then
+			call disarmTrap(t, p, d)
+			
+	  ! Unlock a chest if you have keys
+	  else if(index(command, "unlock") > 0) then
+	  	!If the room contains a treasure chest
+			if (d%has_treasure) then
+				print*, "There is a locked treasure chest in this room."
+				call unlockChest(c, p)
+			end if
 
 		! Buy an item from a shop
 		else if(index(command, "buy") > 0) then
@@ -219,9 +233,10 @@ program world
 		! Check your items
 		else if(index(command, "check-item") > 0) then
 
-		! Look around you to gather your bearings
-		else if(index(command, "look") > 0) then
-
+	  ! Look around you to gather your bearings
+	  else if(index(command, "look") > 0) then
+			call examine_room(d)
+			
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
