@@ -3,6 +3,7 @@ program world
 	use classTreasure
 	use class_dungeon_floor
 	use classPlayer
+	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -11,8 +12,8 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell)					:: fireball
-	type(spell)					:: lesser_heal
+	type(spell) 				:: fireball
+	type(spell)					:: heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
 	real 								:: rrand
@@ -30,17 +31,15 @@ program world
 	p%skill_points=6
 	call update_derived_stats(p)
 
-	fireball%name     ="Fireball"
-	fireball%mana_cost=30
-	fireball%dice_roll=20
-	fireball%known    =.false.
+	!init spellbook
 
-	lesser_heal%name     ="Lesser Heal"
-	lesser_heal%mana_cost=30
-	lesser_heal%dice_roll=20
-	lesser_heal%known    =.false.
+	fireball%name      = "Fireball"
+	fireball%mana_cost = 30
+	fireball%dice_roll = 40
 
-!	init spellbook
+	heal%name      = "Heal"
+	heal%mana_cost = 30
+	heal%dice_roll = 40
 
 	print *,''
 	print *,adjustl('Good Morrow '), p%name
@@ -57,12 +56,9 @@ program world
 
 	call make_new_room(d, .true.)
 
-	
-
 	read (*,'(A)') command
 
 	main: do while(.true.)
-		
 		if(index(command, "combat") > 0) then
 			! TODO Should Mobs have moxie?  To see who gets the initiative
 			!start combat
@@ -78,9 +74,9 @@ program world
 				end if
 
 				read (*,'(A)') command
-			
+
 				if(index(command, "attack") > 0) then
-					
+
 					call RANDOM_NUMBER(rrand)
 					if(rrand > (1 - d%mob%dodge_chance)) then
 						print *, "The ", trim(d%mob%name), " dodged your attack!"
@@ -92,10 +88,17 @@ program world
 
 				else if(index(command, "magic") > 0) then
 
+					print *, "Enter F to shoot a Fireball or H to heal yourself"
+					read (*,'(A)') command
+					if (command.eq.'F' .or. command.eq.'f') then
+						call apply_offensive_spell(fireball,p,d%mob)
+					else
+						call apply_defensive_spell(heal,p)
+					end if
+
 				else if(index(command, "run") > 0) then
 					print *, "You ran away from the ", trim(d%mob%name)
 					exit combat
-
 				else
 					print *, "I don't know what you mean by ",command
 				end if
@@ -172,7 +175,7 @@ program world
 				call go_up(d)
 
         exit main
-		
+
 		! Move down a floor
 		else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
@@ -183,15 +186,15 @@ program world
 
 		! Take an item
 		else if(index(command, "take") > 0) then
-	
+
 	  ! Check for traps
 	  else if(index(command, "check-trap") > 0) then
 			call checkForTrap(t, p, d)
-			
+
 	  ! Disarm a trap
 	  else if(index(command, "disarm-trap") > 0) then
 			call disarmTrap(t, p, d)
-			
+
 	  ! Unlock a chest if you have keys
 	  else if(index(command, "unlock") > 0) then
 	  	!If the room contains a treasure chest
@@ -217,18 +220,4 @@ program world
 		else if(index(command, "check-item") > 0) then
 
 	  ! Look around you to gather your bearings
-	  else if(index(command, "look") > 0) then
-			call examine_room(d)
-			
-		! Quit the game
-		else if(index(command, "quit") > 0) then
-			exit main
-		else
-			print *, "I don't know what you mean by ",command
-		end if
-
-		read (*,'(A)') command
-	end do main
-  !calculate the score
-	print *, "Game Over: Your Final Score is ",get_score(p)
-end program world
+	  else if(index(command, "look") > 0) t
