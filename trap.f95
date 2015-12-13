@@ -1,6 +1,6 @@
 module classTrap
   use class_dungeon_floor
-  
+
 	implicit none
 	private
 	public :: Trap, getTrapName, getTrapType, disarmTrap, checkForTrap, triggerTrap, effectPlayer, trapPrint
@@ -12,7 +12,7 @@ module classTrap
 	end type Trap
 
 ! Set up the methods for the trap module.
-contains	
+contains
 	! Return the name of the trap.
 	function getTrapName(this) result (trap_name)
 		implicit none
@@ -47,12 +47,12 @@ contains
 		!set up random
     call RANDOM_SEED(size = n)
     allocate(seed(n))
-    
+
     call system_clock(count = clock)
     seed = clock + 37 * (/ (i - 1, i = 1, n) /)
     call RANDOM_SEED(PUT = seed)
     deallocate(seed)
-    
+
     call RANDOM_NUMBER(rrand)
     irand = rrand / 5
 
@@ -69,26 +69,26 @@ contains
 			else
 				print*, "Trap has already been triggered. You can't disarm it!"
 			end if
-		else 
+		else
 			print*, "This room doesn't contain a trap!"
 		end if
 	end subroutine disarmTrap
 
-	subroutine checkForTrap(this, plr, dungeon) 
+	subroutine checkForTrap(this, plr, dungeon)
 		use classPlayer
 		implicit none
 		type(Trap) :: this
 		type(Player) :: plr
 		type(dungeon_floor) :: dungeon
-		
+
 		if (plr%perception_chance > (dungeon%floor_number/20)) then
 			if (dungeon%has_trap) then
 				print*, "You find a hidden trap ahead of you."
 			else
 				print*, "After a thorough search, you are certain that this room doesn't contain any traps."
 			end if
-		else 
-			print*, "It's hard to tell if this room has a trap or not."
+		else
+			print*, "You cannot seem to find any traps in this room."
 		end if
 	end subroutine checkForTrap
 
@@ -109,39 +109,39 @@ contains
 		use class_dungeon_floor
 		use classPlayer
 		implicit none
-		
+
 		type(Trap) :: this
 		type(Player) :: plr
 		type(dungeon_floor) :: dungeon
 		integer :: i, n, clock, irand, damage
     integer, dimension(:), allocatable :: seed
     real    :: rrand
-		
+
 		!set up random
     call RANDOM_SEED(size = n)
     allocate(seed(n))
-    
+
     call system_clock(count = clock)
     seed = clock + 37 * (/ (i - 1, i = 1, n) /)
     call RANDOM_SEED(PUT = seed)
     deallocate(seed)
-    
+
     call RANDOM_NUMBER(rrand)
     irand = rrand / 5
-		
+
 		! Check if the player dodges the trap.
 		if (this%triggered .eqv. .false.) then
 			this%triggered = .true.
 			if (plr%dodge_chance > (irand + (dungeon%floor_number/20))) then
 				print*, " Due to your deftly abilities, you succesfully dodge the ", trim(this%trap_name), "!"
-			else 
-				if (this%trap_type .eq. 1) then			
+			else
+				if (this%trap_type .eq. 1) then
 					! calculate the damage
 					call RANDOM_NUMBER(rrand)
 					damage = floor(rrand * (plr%hp / 3)) + 1
-				
+
 					Print  "(a5,a,a22,i3,a7)",' The ', trim(this%trap_name), ' injures you. You take ', damage, ' damage.'
-				
+
 					! damage the player up to a third of their health
 					plr%hp = plr%hp - damage
 				else if (this%trap_type .eq. 2) then

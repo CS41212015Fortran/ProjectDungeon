@@ -97,7 +97,7 @@ module classPlayer
 		type(Player), intent(inout) :: this
 		type(character) :: input
 		print *,trim(this%name)," went up a level!"
-		print *,'Entering the following chacter will boost that stat by 1'
+		print *,'Entering the following commands will boost that stat by 1'
 		print *,'Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 
 		do while (this%skill_points>0)

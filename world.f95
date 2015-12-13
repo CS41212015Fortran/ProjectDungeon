@@ -46,13 +46,19 @@ program world
 	heal%known    =.false.
 
 	print *,''
-  print '(a12,a32)','Good Morrow ', trim(p%name)
-	print '(a24)','Time to boost your stats'
-	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
-	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
-	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
-	print '(a91)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
-	print '(a42)',"Remeber you can ask for 'help' at any time"
+  print *,'Good Morrow ', trim(p%name)
+	print *,'Time to boost your stats'
+	print *,'You major stats are Strength, Intelegence, and Moxie'
+	print *,'Strength determines you max HP and how much damage your melee attacks will do'
+	print *,'Intelegence determines your max Mana, your Perception, and how much damage spells will do'
+	print *,'Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
+	print *,''
+	print *,"Valid Commands:"
+	print *,"up down north south east west"
+	print *,"combat check-stats check-bag use-hp use-mp"
+	print *,"look unlock distarm-trap check-trap quit"
+	print *,''
+	print *,"Remeber you can ask for 'help' at any time"
 	print *,''
 	call player_level_up(p)
 	print *,''
@@ -154,7 +160,7 @@ program world
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				
+
 
 		! Go South
 		else if(index(command, "south") > 0) then
@@ -163,7 +169,7 @@ program world
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				
+
 
 		! Go East
 		else if(index(command, "east") > 0) then
@@ -172,7 +178,7 @@ program world
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				
+
 
 		! Go West
 		else if(index(command, "west") > 0) then
@@ -201,7 +207,7 @@ program world
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-			
+
 
 		! Take an item
 		else if(index(command, "take") > 0) then
@@ -223,18 +229,14 @@ program world
 				call unlockChest(c, p, d)
 			end if
 
-		! Buy an item from a shop
-		else if(index(command, "buy") > 0) then
-
-		! Sell an item at a shop
-		else if(index(command, "sell") > 0) then
-
-		! Drop an item
-		else if(index(command, "drop") > 0) then
+		else if(index(command, "use-hp") > 0) then
+			call use_hp_pot(p)
+		else if(index(command, "use-mp") > 0) then
+			call use_mp_pot(p)
 
 		! Check your stats
 		else if(index(command, "check-stats") > 0) then
-		  	call print_stats(p)
+		  call print_stats(p)
 
 		! Check your items
 		else if(index(command, "check-bag") > 0) then
@@ -246,7 +248,11 @@ program world
 
 		! display help
 		else if(index(command, "help") > 0) then
-			print *, "Valid Commands: up down north south east west combat check-stats check-bag look unlock distarm-trap check-trap quit"
+			print *,''
+			print *,"Valid Commands: up down north south east west"
+			print *,"combat check-stats check-bag use-hp use-mp"
+			print *,"look unlock distarm-trap check-trap quit"
+			print *,''
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
