@@ -70,6 +70,9 @@ module class_mob
 
 	call RANDOM_NUMBER(rrand)
 	!dodge
+	if(rrand > .5) then
+		rrand = .5
+	end if
 	this%dodge_chance = rrand
 
 

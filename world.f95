@@ -45,14 +45,13 @@ program world
 	heal%known    =.false.
 
 	print *,''
-  print '(a12a32)','Good Morrow ', p%name
+  print '(a12,a32)','Good Morrow ', p%name
 	print '(a24)','Time to boost your stats'
 	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
 	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
 	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
 	print '(a91)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
 	print '(a57)','Entering the following chacter will boost that stat by 1'
-	print '(a14)','Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 	print *,''
 	call player_level_up(p)
 	print *,''
@@ -195,6 +194,9 @@ program world
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
+				p%skill_points=3
+				call player_level_up(p)
+
 			call go_down(d)
 
 		! Take an item
@@ -236,6 +238,9 @@ program world
 	  else if(index(command, "look") > 0) then
 			call examine_room(d)
 
+		! display help
+		else if(index(command, "help") > 0) then
+			print *, "Valid Commands: combat up down north south east west check-stats look unlock distarm-trap check-trap quit"
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
