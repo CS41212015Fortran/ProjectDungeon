@@ -3,7 +3,7 @@ module classPlayer
 	private
 	public :: Player,update_player_stats,update_derived_stats,print_stats, &
             has_key,short_stats,get_score, player_level_up, use_hp_pot, &
-            use_mp_pot
+            use_mp_pot, check_bag
 
 	!type declaration
 	type Player
@@ -42,6 +42,14 @@ module classPlayer
 			bool = .false.
 		end if
 	end function has_key
+
+	subroutine check_bag(this)
+		implicit none
+		type(Player), intent(inout) :: this
+		Print  *,trim(this%name)," has :"
+		Print  "(a14,i10)",'HP POTIONS  = ',this%hp_pots
+		Print  "(a14,i10)",'MP POTIONS  = ',this%mp_pots
+	end subroutine check_bag
 
   !check for and use a health pot
 	subroutine use_hp_pot(this)
@@ -88,11 +96,12 @@ module classPlayer
 		implicit none
 		type(Player), intent(inout) :: this
 		type(character) :: input
-		print '(a32,a17)',this%name," went up a level!"
-		print '(a76)','Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
+		print *,trim(this%name)," went up a level!"
+		print *,'Entering the following commands will boost that stat by 1'
+		print *,'Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 
 		do while (this%skill_points>0)
-			print '(a9,i3,a25)','you have ',this%skill_points,' skill point(s) remaining'
+			print '(a9,i1,a25)','you have ',this%skill_points,' skill point(s) remaining'
 			read *,input
 			select case (input)
 				case ('s')
@@ -159,7 +168,8 @@ module classPlayer
 		Print  "(a14,i10)",'HP          = ',this%hp
 		Print  "(a14,i10)",'MANA        = ',this%mana
 		Print  "(a14,i10)",'KEYS        = ',this%keys
-		Print  "(a14,i10)",'GOLD        = ',this%gold
+		Print  "(a14,i10)",'HP POTIONS  = ',this%hp_pots
+		Print  "(a14,i10)",'MP POTIONS  = ',this%mp_pots
 		Print  "(a14,i10)",'SKILL POINTS= ',this%skill_points
 	end subroutine short_stats
 
@@ -180,8 +190,8 @@ module classPlayer
 		Print  "(a14,f10.1)",'DISARM%     = ',this%disarm_chance
 		Print  "(a14,i10)",'MELEE DMG   = ',this%melee_damage
 		Print  "(a14,i10)",'KEYS        = ',this%keys
-		Print  "(a14,i10)",'GOLD        = ',this%gold
-		Print  "(a14,i10)",'XP          = ',this%xp
+		Print  "(a14,i10)",'HP POTIONS  = ',this%hp_pots
+		Print  "(a14,i10)",'MP POTIONS  = ',this%mp_pots
 		Print  "(a14,i10)",'SKILL POINTS= ',this%skill_points
 		Print  "(a14,i10)",'SCORE       = ',this%score
 

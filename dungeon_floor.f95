@@ -228,7 +228,7 @@ contains
       if(this%has_mob) then
         print*, "You are not alone. There is a ", trim(this%mob%name), " here."
       end if
-      
+            
       if(this%has_treasure) then
         print*, "There is also a treasure chest."
       end if

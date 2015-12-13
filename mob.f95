@@ -60,12 +60,12 @@ module class_mob
     
     call RANDOM_NUMBER(rrand)
     !health
-    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale)
+    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale) + 1
     this%health = irand
     
     call RANDOM_NUMBER(rrand)
     !strength
-    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale)
+    irand = ceiling(rrand * (100 * dungeon_scale)) + (5 * dungeon_scale) + 1
     this%strength = irand
 
 	call RANDOM_NUMBER(rrand)

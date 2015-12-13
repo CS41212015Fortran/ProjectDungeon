@@ -1,10 +1,9 @@
 program world
 	use classTrap
+	use classPlayer
 	use classTreasure
 	use class_spells
 	use class_dungeon_floor
-	use classPlayer
-	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -30,6 +29,8 @@ program world
 	p%score       =0
 	p%gold        =0
 	p%skill_points=6
+	p%hp_pots     =3
+	p%mp_pots     =3
 	call update_derived_stats(p)
 
 	!init spellbook
@@ -45,13 +46,19 @@ program world
 	heal%known    =.false.
 
 	print *,''
-  print '(a12,a32)','Good Morrow ', p%name
-	print '(a24)','Time to boost your stats'
-	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
-	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
-	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
-	print '(a91)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
-	print '(a57)','Entering the following chacter will boost that stat by 1'
+  print *,'Good Morrow ', trim(p%name)
+	print *,'Time to boost your stats'
+	print *,'You major stats are Strength, Intelegence, and Moxie'
+	print *,'Strength determines you max HP and how much damage your melee attacks will do'
+	print *,'Intelegence determines your max Mana, your Perception, and how much damage spells will do'
+	print *,'Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
+	print *,''
+	print *,"Valid Commands:"
+	print *,"up down north south east west"
+	print *,"combat check-stats check-bag use-hp use-mp"
+	print *,"look unlock distarm-trap check-trap quit"
+	print *,''
+	print *,"Remeber you can ask for 'help' at any time"
 	print *,''
 	call player_level_up(p)
 	print *,''
@@ -101,18 +108,7 @@ program world
 					print *, "You defeated the ", trim(d%mob%name), "!"
 					d%has_mob = .false.
 				 	exit combat
-
-				else
-					!mob does their turn
-					print *, "It is the ", trim(d%mob%name), "'s turn to attack!"
-
-				    call RANDOM_NUMBER(rrand)
-				    if (rrand > (1 - p%dodge_chance)) then
-						!attack will connect
-						p%hp = p%hp - d%mob%strength
-						print *, "You were hit by the ", trim(d%mob%name), " for ", d%mob%strength, " damage!"
-						Print "(a13,i2,a7)", 'You now have ', p%hp, ' health'
-
+				 	
 					else
 						!mob does their turn
 						print *, "It is the ", trim(d%mob%name), "'s turn to attack!"
@@ -134,70 +130,64 @@ program world
 							print *, "You were killed by the ", trim(d%mob%name)
 							exit main
 						end if
-					end if
-
-					if(p%hp < 0) then
-						!killed in action
-						print *, "You were killed by the ", trim(d%mob%name)
-						exit main
-					end if
 				end if
 			end do combat
 			!end combat
 
 		! Go North
 		else if(index(command, "north") > 0) then
-		  	! If the room contains a trap
-				if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				call go_north(d)
+	  	! If the room contains a trap
+			if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
+      call go_north(d)
+
 
 		! Go South
 		else if(index(command, "south") > 0) then
-		  	if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				call go_south(d)
+			if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
+      call go_south(d)
+
 
 		! Go East
 		else if(index(command, "east") > 0) then
-		  	if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				call go_east(d)
+			if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
+      call go_east(d)
 
 		! Go West
 		else if(index(command, "west") > 0) then
-		  	if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				call go_west(d)
+      if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
+			call go_west(d)
 
 		! Move up a floor
 		else if(index(command, "up") > 0) then
-		  	if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				call go_up(d)
-
-        exit main
+      if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
+			call go_up(d)
+      exit main
 
 		! Move down a floor
 		else if(index(command, "down") > 0) then
-		  	if (d%has_trap) then
-					t = Trap("mine", 1)
-					call effectPlayer(t, p, d)
-				end if
-				p%skill_points=3
-				call player_level_up(p)
-
+	  	if (d%has_trap) then
+				t = Trap("mine", 1)
+				call effectPlayer(t, p, d)
+			end if
 			call go_down(d)
+			p%skill_points=3
+	  	call player_level_up(p)
+
 
 		! Take an item
 		else if(index(command, "take") > 0) then
@@ -215,24 +205,22 @@ program world
 	  	!If the room contains a treasure chest
 			if (d%has_treasure) then
 				print*, "There is a locked treasure chest in this room."
+        c%locked = .TRUE.
 				call unlockChest(c, p, d)
 			end if
 
-		! Buy an item from a shop
-		else if(index(command, "buy") > 0) then
-
-		! Sell an item at a shop
-		else if(index(command, "sell") > 0) then
-
-		! Drop an item
-		else if(index(command, "drop") > 0) then
+		else if(index(command, "use-hp") > 0) then
+			call use_hp_pot(p)
+		else if(index(command, "use-mp") > 0) then
+			call use_mp_pot(p)
 
 		! Check your stats
 		else if(index(command, "check-stats") > 0) then
-		  	call print_stats(p)
+		  call print_stats(p)
 
 		! Check your items
-		else if(index(command, "check-item") > 0) then
+		else if(index(command, "check-bag") > 0) then
+			call check_bag(p)
 
 	  ! Look around you to gather your bearings
 	  else if(index(command, "look") > 0) then
@@ -240,7 +228,11 @@ program world
 
 		! display help
 		else if(index(command, "help") > 0) then
-			print *, "Valid Commands: combat up down north south east west check-stats look unlock distarm-trap check-trap quit"
+			print *,''
+			print *,"Valid Commands: up down north south east west"
+			print *,"combat check-stats check-bag use-hp use-mp"
+			print *,"look unlock distarm-trap check-trap quit"
+			print *,''
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
@@ -251,5 +243,5 @@ program world
 		read (*,'(A)') command
 	end do main
   !calculate the score
-	print *, trim(p%name),"'s Quest has come to an end: Your Final Score is ", get_score(p)
+	print *, trim(p%name),"'s Quest has come to an end: Your Final Score is ",get_score(p)
 end program world
