@@ -1,10 +1,9 @@
 program world
 	use classTrap
+	use classPlayer
 	use classTreasure
 	use class_spells
 	use class_dungeon_floor
-	use classPlayer
-	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -30,6 +29,8 @@ program world
 	p%score       =0
 	p%gold        =0
 	p%skill_points=6
+	p%hp_pots     =3
+	p%mp_pots     =3
 	call update_derived_stats(p)
 
 	!init spellbook
@@ -45,13 +46,13 @@ program world
 	heal%known    =.false.
 
 	print *,''
-  print '(a12,a32)','Good Morrow ', p%name
+  print '(a12,a32)','Good Morrow ', trim(p%name)
 	print '(a24)','Time to boost your stats'
 	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
 	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
 	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
 	print '(a91)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
-	print '(a57)','Entering the following chacter will boost that stat by 1'
+	print '(a42)',"Remeber you can ask for 'help' at any time"
 	print *,''
 	call player_level_up(p)
 	print *,''
@@ -236,7 +237,8 @@ program world
 		  	call print_stats(p)
 
 		! Check your items
-		else if(index(command, "check-item") > 0) then
+		else if(index(command, "check-bag") > 0) then
+			call check_bag(p)
 
 	  ! Look around you to gather your bearings
 	  else if(index(command, "look") > 0) then
@@ -244,7 +246,7 @@ program world
 
 		! display help
 		else if(index(command, "help") > 0) then
-			print *, "Valid Commands: combat up down north south east west check-stats look unlock distarm-trap check-trap quit"
+			print *, "Valid Commands: up down north south east west combat check-stats check-bag look unlock distarm-trap check-trap quit"
 		! Quit the game
 		else if(index(command, "quit") > 0) then
 			exit main
@@ -255,5 +257,5 @@ program world
 		read (*,'(A)') command
 	end do main
   !calculate the score
-	print *, p%name,"'s Quest has come to an end: Your Final Score is ",get_score(p)
+	print *, trim(p%name),"'s Quest has come to an end: Your Final Score is ",get_score(p)
 end program world
