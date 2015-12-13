@@ -3,6 +3,7 @@ program world
 	use classTreasure
 	use class_dungeon_floor
 	use classPlayer
+	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -36,10 +37,10 @@ program world
 	fireball%dice_roll=20
 	fireball%known    =.false.
 
-	lesser_heal%name     ="Lesser Heal"
-	lesser_heal%mana_cost=30
-	lesser_heal%dice_roll=20
-	lesser_heal%known    =.false.
+	heal%name     ="Heal"
+	heal%mana_cost=30
+	heal%dice_roll=20
+	heal%known    =.false.
 
 	print *,''
   print '(a12a32)','Good Morrow ', p%name
@@ -47,8 +48,8 @@ program world
 	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
 	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
 	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
-	print '(a14)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
-	print '(a14)','Entering the following chacter will boost that stat by 1'
+	print '(a91)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
+	print '(a57)','Entering the following chacter will boost that stat by 1'
 	print '(a14)','Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 	print *,''
 	call player_level_up(p)
