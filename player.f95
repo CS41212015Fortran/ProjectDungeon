@@ -2,7 +2,8 @@ module classPlayer
 	implicit none
 	private
 	public :: Player,update_player_stats,update_derived_stats,print_stats, &
-            has_key,short_stats,get_score, player_level_up
+            has_key,short_stats,get_score, player_level_up, use_hp_pot, &
+            use_mp_pot
 
 	!type declaration
 	type Player
@@ -13,15 +14,21 @@ module classPlayer
 		integer :: hp
 		integer :: hp_max
 		integer :: mana
+    integer :: mana_max
 		integer :: xp
 		integer :: skill_points
 		integer :: score
 		integer :: melee_damage
 		integer :: keys
+    integer :: hp_pots
+    integer :: mp_pots
 		integer :: gold
 		real :: dodge_chance
 		real :: disarm_chance
 		real :: perception_chance
+    
+    
+    
 	end type Player
 
 	contains
@@ -30,7 +37,7 @@ module classPlayer
 	function has_key(this) result (bool)
 		implicit none
 		type(Player), intent(in) :: this
-		logical bool;
+		logical :: bool
 
 		if (this%keys > 0) then
 			bool = .true.
@@ -38,6 +45,46 @@ module classPlayer
 			bool = .false.
 		end if
 	end function has_key
+  
+  !check for and use a health pot
+	subroutine use_hp_pot(this)
+		implicit none
+		type(Player), intent(inout) :: this
+
+		if (this%hp_pots > 0) then
+      this%hp_pots = this%hp_pots - 1
+      
+      this%hp = this%hp + this%hp_max * .25
+      if (this%hp > this%hp_max) then
+        this%hp = this%hp_max
+      end if
+      
+			print *, "you chugged an HP pot and have", &
+                this%hp,"/",this%hp_max, "health."
+		else
+			print *, "You must construct additional HP potions"
+		end if
+	end subroutine use_hp_pot
+  
+  !check for and use a mana pot
+	subroutine use_mp_pot(this)
+		implicit none
+		type(Player), intent(inout) :: this
+
+		if (this%mp_pots > 0) then
+      this%mp_pots = this%mp_pots - 1
+      
+      this%mana = this%mana + this%mana_max * .25
+      if (this%mana > this%mana_max) then
+        this%mana = this%mana_max
+      end if
+      
+			print *, "you chugged an MP pot and have", &
+                this%mana,"/",this%mana_max, "mana."
+		else
+			print *, "You must construct additional HP potions"
+		end if
+	end subroutine use_mp_pot
 
 	!used for intial character creation and leveling up player stats
 	subroutine player_level_up(this)
@@ -97,7 +144,8 @@ module classPlayer
 
 		this%hp_max = 80 + this%strength*5
 		this%hp = this%hp_max
-		this%mana = 60 + this%intelegence*10
+		this%mana_max = 60 + this%intelegence*10
+    this%mana = this%mana_max
 		this%melee_damage = (this%strength*2)-1
 		this%dodge_chance = log(real(this%moxie))/5
 		this%disarm_chance = log(real(this%moxie))/3
