@@ -229,6 +229,10 @@ contains
         print*, "You are not alone. There is a ", trim(this%mob%name), " here."
       end if
       
+      if(this%has_trap) then
+        print*, "There is a trap here."
+      end if
+      
       if(this%has_treasure) then
         print*, "There is also a treasure chest."
       end if

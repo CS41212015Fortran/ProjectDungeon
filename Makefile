@@ -7,7 +7,8 @@ dungeon:
 	gfortran -c spells.f95
 	gfortran -c trap.f95
 	gfortran -c treasure.f95
-	gfortran world.f95 player.o mob.o trap.o spells.o treasure.o dungeon_floor.o -o dungeon
+	gfortran -c world.f95
+	gfortran world.o player.o mob.o trap.o spells.o treasure.o dungeon_floor.o -o dungeon
 	
 clean:
 	rm -f dungeon; rm -f *.o; rm -f *.mod; rm -f *~

@@ -148,56 +148,59 @@ program world
 		! Go North
 		else if(index(command, "north") > 0) then
 		  	! If the room contains a trap
+        call go_north(d)
 				if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				call go_north(d)
+				
 
 		! Go South
 		else if(index(command, "south") > 0) then
+        call go_south(d)
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				call go_south(d)
+				
 
 		! Go East
 		else if(index(command, "east") > 0) then
+        call go_east(d)
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				call go_east(d)
+				
 
 		! Go West
 		else if(index(command, "west") > 0) then
-		  	if (d%has_trap) then
+		  	call go_west(d)
+        if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				call go_west(d)
 
 		! Move up a floor
 		else if(index(command, "up") > 0) then
-		  	if (d%has_trap) then
+		  	call go_up(d)
+        if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				call go_up(d)
 
         exit main
 
 		! Move down a floor
 		else if(index(command, "down") > 0) then
+      p%skill_points=3
+		  call player_level_up(p)
+      call go_down(d)
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
 					call effectPlayer(t, p, d)
 				end if
-				p%skill_points=3
-				call player_level_up(p)
-
-			call go_down(d)
+			
 
 		! Take an item
 		else if(index(command, "take") > 0) then
@@ -215,6 +218,7 @@ program world
 	  	!If the room contains a treasure chest
 			if (d%has_treasure) then
 				print*, "There is a locked treasure chest in this room."
+        c%locked = .TRUE.
 				call unlockChest(c, p, d)
 			end if
 
