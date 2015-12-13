@@ -43,6 +43,8 @@ program world
 
 	call make_new_room(d, .true.)
 
+	
+
 	read (*,'(A)') command
 
 	main: do while(.true.)
@@ -50,19 +52,22 @@ program world
 				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
+
+
 					if(d%has_mob .eqv. .FALSE.) then
 						print *, "There is no mob here to fight!"
 						exit combat
+					else
+						print *, "You've entered combat with the ", d%mob%name, "!"
+						print *, "You may attack, use magic, or run away."
 					end if
 
 					read (*,'(A)') command
 
-					action: do while(.true.)
 						if(index(command, "attack") > 0) then
 							print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
 							d%mob%health = d%mob%health - p%strength
 							print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
-						
 						else if(index(command, "magic") > 0) then
 
 						else if(index(command, "run") > 0) then
@@ -72,7 +77,6 @@ program world
 						else
 							print *, "I don't know what you mean by ",command
 						end if
-					end do action
 
 					if(d%mob%health<=0) then
 						print *, "You defeated the ", d%mob%name, "!"
