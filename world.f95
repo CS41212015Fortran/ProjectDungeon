@@ -3,7 +3,6 @@ program world
 	use classTreasure
 	use class_dungeon_floor
 	use classPlayer
-	use class_spells
 
 	!Need to use this line for every program
 	implicit none
@@ -12,8 +11,8 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
-	type(spell) 				:: fireball
-	type(spell)					:: heal
+	type(spell)					:: fireball
+	type(spell)					:: lesser_heal
 	type(dungeon_floor) :: d
 	character(len=32) 	:: command
 	real 								:: rrand
@@ -31,18 +30,20 @@ program world
 	p%skill_points=6
 	call update_derived_stats(p)
 
+	fireball%name     ="Fireball"
+	fireball%mana_cost=30
+	fireball%dice_roll=20
+	fireball%known    =.false.
+
+	lesser_heal%name     ="Lesser Heal"
+	lesser_heal%mana_cost=30
+	lesser_heal%dice_roll=20
+	lesser_heal%known    =.false.
+
 	!init spellbook
 
-	fireball%name      = "Fireball"
-	fireball%mana_cost = 30
-	fireball%dice_roll = 40
-
-	heal%name      = "Heal"
-	heal%mana_cost = 30
-	heal%dice_roll = 40
-
 	print *,''
-	print *,adjustl('Good Morrow '), p%name
+  print *,adjustl('Good Morrow '), p%name
 	print *,adjustl('Time to boost your stats')
 	print *,adjustl('You major stats are Strength, Intelegence, and Moxie')
 	print *,adjustl('Strength determines you max HP and how much damage your melee attacks will do')
@@ -56,9 +57,12 @@ program world
 
 	call make_new_room(d, .true.)
 
+	
+
 	read (*,'(A)') command
 
 	main: do while(.true.)
+		
 		if(index(command, "combat") > 0) then
 			! TODO Should Mobs have moxie?  To see who gets the initiative
 			!start combat
@@ -68,53 +72,40 @@ program world
 					print *, "There is no mob here to fight!"
 					exit combat
 				else
-					print *, "The ", trim(d%mob%name), " has ", d%mob%health, " health."
-					print "(a7 f3.2 a30)", "It has ", d%mob%dodge_chance, " chance to dodge your attack."
+					print *, "The ", d%mob%name, " has ", d%mob%health, " health"
 					print *, "You may attack, use magic, or run away."
 				end if
 
 				read (*,'(A)') command
-
+			
 				if(index(command, "attack") > 0) then
-					call RANDOM_NUMBER(rrand)
-					if(rrand > (1 - d%mob%dodge_chance)) then
-						print *, "The ", trim(d%mob%name), " dodged your attack!"
-					else
-						print *, "You attack the ", trim(d%mob%name), " for ", p%strength, " damage"
-						d%mob%health = d%mob%health - p%strength
-						print *, "The ", trim(d%mob%name), " is now at ", d%mob%health, " health"
-					end if
+					print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+					d%mob%health = d%mob%health - p%strength
+					print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
 				else if(index(command, "magic") > 0) then
 
-					print *, "Enter F to shoot a Fireball or H to heal yourself"
-					read (*,'(A)') command
-					if (command.eq.'F' .or. command.eq.'f') then
-						call apply_offensive_spell(fireball,p,d%mob)
-					else
-						call apply_defensive_spell(heal,p)
-					end if
-
 				else if(index(command, "run") > 0) then
-					print *, "You ran away from the ", trim(d%mob%name)
+					print *, "You ran away from the ", d%mob%name
 					exit combat
+
 				else
 					print *, "I don't know what you mean by ",command
 				end if
 
 				if(d%mob%health<=0) then
-					print *, "You defeated the ", trim(d%mob%name), "!"
+					print *, "You defeated the ", d%mob%name, "!"
 					d%has_mob = .false.
 				 	exit combat
 
 				else
 					!mob does their turn
-					print *, "It is the ", trim(d%mob%name), "'s turn to attack!"
+					print *, "It is the ", d%mob%name, "'s turn to attack!"
 
 				    call RANDOM_NUMBER(rrand)
 				    if (rrand > (1 - p%dodge_chance)) then
 						!attack will connect
 						p%hp = p%hp - d%mob%strength
-						print *, "You were hit by the ", trim(d%mob%name) , " for ", d%mob%strength, " damage!"
+						print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
 						print *, "You now have ", p%hp, " health"
 
 					else
@@ -125,24 +116,24 @@ program world
 					    if (rrand > (1 - p%dodge_chance)) then
 							!attack will connect
 							p%hp = p%hp - d%mob%strength
-							print *, "You were hit by the ", trim(d%mob%name), " for ", d%mob%strength, " damage!"
+							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
 							print *, "You now have ", p%hp, " health"
 
 						else
 							!attack misses
-							print *, "You were able to dodge the ", trim(d%mob%name), "'s attack!"
+							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
 						end if
 
 						if(p%hp < 0) then
 							!killed in action
-							print *, "You were killed by the ", trim(d%mob%name)
+							print *, "You were killed by the ", d%mob%name
 							exit main
 						end if
 					end if
 
 					if(p%hp < 0) then
 						!killed in action
-						print *, "You were killed by the ", trim(d%mob%name)
+						print *, "You were killed by the ", d%mob%name
 						exit main
 					end if
 				end if
@@ -191,7 +182,7 @@ program world
 				call go_up(d)
 
         exit main
-
+		
 		! Move down a floor
 		else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
@@ -202,15 +193,15 @@ program world
 
 		! Take an item
 		else if(index(command, "take") > 0) then
-
+	
 	  ! Check for traps
 	  else if(index(command, "check-trap") > 0) then
 			call checkForTrap(t, p, d)
-
+			
 	  ! Disarm a trap
 	  else if(index(command, "disarm-trap") > 0) then
 			call disarmTrap(t, p, d)
-
+			
 	  ! Unlock a chest if you have keys
 	  else if(index(command, "unlock") > 0) then
 	  	!If the room contains a treasure chest
@@ -236,4 +227,18 @@ program world
 		else if(index(command, "check-item") > 0) then
 
 	  ! Look around you to gather your bearings
-	  else if(index(command, "look") > 0) t
+	  else if(index(command, "look") > 0) then
+			call examine_room(d)
+			
+		! Quit the game
+		else if(index(command, "quit") > 0) then
+			exit main
+		else
+			print *, "I don't know what you mean by ",command
+		end if
+
+		read (*,'(A)') command
+	end do main
+  !calculate the score
+	print *, "Game Over: Your Final Score is ",get_score(p)
+end program world
