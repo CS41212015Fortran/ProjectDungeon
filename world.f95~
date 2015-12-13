@@ -38,8 +38,11 @@ program world
 	fireball%dice_roll=20
 	fireball%known    =.false.
 
-
+<<<<<<< HEAD
+	heal%name     ="Lesser Heal"
+=======
 	heal%name     ="Heal"
+>>>>>>> 3995d2fda03726cf3722f612f0273bc197e8ac09
 	heal%mana_cost=30
 	heal%dice_roll=20
 	heal%known    =.false.
