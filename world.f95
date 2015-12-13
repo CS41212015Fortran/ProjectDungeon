@@ -12,8 +12,6 @@ program world
 	type(Treasure)			:: c
 	type(player) 				:: p
 	type(dungeon_floor) :: d
-	type(integer) :: points = 6
-	type(character) :: input
 	character(len=32) :: command
 	real :: 				rrand
 
@@ -27,6 +25,7 @@ program world
 	p%keys=1
 	p%score=0
 	p%gold=0
+	p%skill_points=6
 	call update_derived_stats(p)
 
 	print *,''
@@ -39,24 +38,7 @@ program world
 	print *,adjustl('Entering the following chacter will boost that stat by 1')
 	print *,adjustl('Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie')
 	print *,''
-
-	do while (points>0)
-		print *,'you have ',points,' point(s) remaining'
-		read *,input
-		select case (input)
-			case ('s')
-				call update_player_stats(p,'s',1)
-				points = points - 1
-			case ('i')
-	 			call update_player_stats(p,'i',1)
-				points = points - 1
-			case ('m')
-	 			call update_player_stats(p,'m',1)
-				points = points - 1
-			case default
-				print *,input,' is not a valid command'
-		end select
-	end do
+	call player_level_up(p)
 	print *,''
 
 	call make_new_room(d, .true.)
@@ -100,7 +82,7 @@ program world
 						!mob does their turn
 						print *, "It is the ", mob%name, "'s turn to attack!"
 
-						
+
 
 					    call RANDOM_NUMBER(rrand)
 					    if (new_seed > (1 - p%dodge_chance)) then
