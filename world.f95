@@ -11,22 +11,36 @@ program world
 	type(Trap) 					:: t = Trap("bear-trap", 1)
 	type(Treasure)			:: c
 	type(player) 				:: p
+	type(spell)					:: fireball
+	type(spell)					:: lesser_heal
 	type(dungeon_floor) :: d
-	character(len=32) :: command
-	real :: 				rrand
+	character(len=32) 	:: command
+	real 								:: rrand
 
 	!init player
 	print *,' Enter player name '
 	read (*,'(A)') p%name
-	p%strength=1
-	p%intelegence=1
-	p%moxie=1
-	p%xp=0
-	p%keys=1
-	p%score=0
-	p%gold=0
+	p%strength    =1
+	p%intelegence =1
+	p%moxie       =1
+	p%xp          =0
+	p%keys        =1
+	p%score       =0
+	p%gold        =0
 	p%skill_points=6
 	call update_derived_stats(p)
+
+	fireball%name     ="Fireball"
+	fireball%mana_cost=30
+	fireball%dice_roll=20
+	fireball%known    =.false.
+
+	lesser_heal%name     ="Lesser Heal"
+	lesser_heal%mana_cost=30
+	lesser_heal%dice_roll=20
+	lesser_heal%known    =.false.
+
+	!init spellbook
 
 	print *,''
   print *,adjustl('Good Morrow '), p%name
