@@ -85,20 +85,3 @@ module class_mob
   end subroutine attack
     
 end module class_Mob
-
-!program mob_test
-!	use class_Mob
-!	implicit none
-
-!	type(Mob) :: e 		! create a mob
-!	type(Mob) :: p
-
-!	e = Mob('Ureel', 20, 10)
-!	call Mob_print(e)
-
-!	p = Mob('Kevin', 20, 10)
-!	call attack(p, e)
-
-!	call Mob_print(e)
-
-!end program mob_test

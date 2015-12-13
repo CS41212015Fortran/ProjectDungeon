@@ -43,6 +43,8 @@ program world
 
 	call make_new_room(d, .true.)
 
+	
+
 	read (*,'(A)') command
 
 	main: do while(.true.)
@@ -50,49 +52,54 @@ program world
 				! TODO Should Mobs have moxie?  To see who gets the initiative
 				!start combat
 				combat: do while(.true.)
+
+
+					if(d%has_mob .eqv. .FALSE.) then
+						print *, "There is no mob here to fight!"
+						exit combat
+					else
+						print *, "You've entered combat with the ", d%mob%name, "!"
+						print *, "You may attack, use magic, or run away."
+					end if
+
 					read (*,'(A)') command
 
-
-					action: do while(.true.)
 						if(index(command, "attack") > 0) then
-							print *, "You choose to attack the ", mob%name, " for ", p%strength, " damage"
-							mob%health = mob%health - p%strength
-							print *, "The ", mob%name, " is now at ", mob%health, " health"
+							print *, "You choose to attack the ", d%mob%name, " for ", p%strength, " damage"
+							d%mob%health = d%mob%health - p%strength
+							print *, "The ", d%mob%name, " is now at ", d%mob%health, " health"
 						else if(index(command, "magic") > 0) then
+						
 						else if(index(command, "run") > 0) then
-							print *, "You ran away from the ", mob%name
+							print *, "You ran away from the ", d%mob%name
 							exit combat
 						else
 							print *, "I don't know what you mean by ",command
 						end if
-					end do action
 
-					if(mob%health<=0) then
-						print *, "You defeated the ", mob%name, "!"
+					if(d%mob%health<=0) then
+						print *, "You defeated the ", d%mob%name, "!"
 					 	exit combat
-					endif
-					if (p%hp<0) then
-						exit main
-				  end if
 
 					else
 						!mob does their turn
-						print *, "It is the ", mob%name, "'s turn to attack!"
+						print *, "It is the ", d%mob%name, "'s turn to attack!"
+
 					    call RANDOM_NUMBER(rrand)
-					    if (new_seed > (1 - p%dodge_chance)) then
+					    if (rrand > (1 - p%dodge_chance)) then
 							!attack will connect
-							p%hp = p%hp - mob%strength
-							print *, "You were hit by the ", mob%name, " for ", mob%strength, " damage!"
+							p%hp = p%hp - d%mob%strength
+							print *, "You were hit by the ", d%mob%name, " for ", d%mob%strength, " damage!"
 							print *, "You now have ", p%hp, " health"
 
-					    end if
 						else
 							!attack misses
-							print *, "You were able to dodge the ", mob%name, "'s attack!"
+							print *, "You were able to dodge the ", d%mob%name, "'s attack!"
 						end if
-						if(p%hp<0)
+
+						if(p%hp < 0) then
 							!killed in action
-							print *, "You were killed by the ", mob%name
+							print *, "You were killed by the ", d%mob%name
 							exit main
 						end if
 					end if
@@ -154,10 +161,12 @@ program world
 
 		  ! Check for traps
 		  else if(index(command, "check-trap") > 0) then
-
+				call checkForTrap(t, p, d)
+				
 		  ! Disarm a trap
 		  else if(index(command, "disarm-trap") > 0) then
-
+				call disarmTrap(t, p, d)
+				
 		  ! Unlock a chest if you have keys
 		  else if(index(command, "unlock") > 0) then
 		  	!If the room contains a treasure chest
@@ -184,7 +193,8 @@ program world
 
 		  ! Look around you to gather your bearings
 		  else if(index(command, "look") > 0) then
-
+				call examine_room(d)
+				
 			! Quit the game
 			else if(index(command, "quit") > 0) then
 				exit main

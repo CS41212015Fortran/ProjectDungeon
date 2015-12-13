@@ -2,7 +2,7 @@ module classPlayer
 	implicit none
 	private
 	public :: Player,update_player_stats,update_derived_stats,print_stats, &
-            has_key,short_stats,get_score
+            has_key,short_stats,get_score, player_level_up
 
 	!type declaration
 	type Player
@@ -141,7 +141,7 @@ module classPlayer
     score = 0
     
     score = score + this%hp
-    score = score + this%mana 
+    score = score + this%mana
     score = score + this%gold * 1000
     score = score + this%keys * 100
     score = score + this%strength * 150

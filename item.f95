@@ -6,7 +6,6 @@ module classItem
 	type Item 
 		character (len=40) :: item_name
 		character (len=200) :: item_effect
-		
 		integer :: item_type
 		integer :: item_value
 	end type Item
