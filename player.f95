@@ -26,9 +26,6 @@ module classPlayer
 		real :: dodge_chance
 		real :: disarm_chance
 		real :: perception_chance
-    
-    
-    
 	end type Player
 
 	contains
@@ -45,7 +42,7 @@ module classPlayer
 			bool = .false.
 		end if
 	end function has_key
-  
+
   !check for and use a health pot
 	subroutine use_hp_pot(this)
 		implicit none
@@ -53,19 +50,19 @@ module classPlayer
 
 		if (this%hp_pots > 0) then
       this%hp_pots = this%hp_pots - 1
-      
+
       this%hp = this%hp + this%hp_max * .25
       if (this%hp > this%hp_max) then
         this%hp = this%hp_max
       end if
-      
+
 			print *, "you chugged an HP pot and have", &
                 this%hp,"/",this%hp_max, "health."
 		else
 			print *, "You must construct additional HP potions"
 		end if
 	end subroutine use_hp_pot
-  
+
   !check for and use a mana pot
 	subroutine use_mp_pot(this)
 		implicit none
@@ -73,12 +70,12 @@ module classPlayer
 
 		if (this%mp_pots > 0) then
       this%mp_pots = this%mp_pots - 1
-      
+
       this%mana = this%mana + this%mana_max * .25
       if (this%mana > this%mana_max) then
         this%mana = this%mana_max
       end if
-      
+
 			print *, "you chugged an MP pot and have", &
                 this%mana,"/",this%mana_max, "mana."
 		else
@@ -91,9 +88,11 @@ module classPlayer
 		implicit none
 		type(Player), intent(inout) :: this
 		type(character) :: input
+		print '(a32,a17)',this%name," went up a level!"
+		print '(a76)','Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 
 		do while (this%skill_points>0)
-			print *,'you have ',this%skill_points,' skill point(s) remaining'
+			print '(a9,i3,a25)','you have ',this%skill_points,' skill point(s) remaining'
 			read *,input
 			select case (input)
 				case ('s')
@@ -106,7 +105,7 @@ module classPlayer
 		 			call update_player_stats(this,'m',1)
 					this%skill_points = this%skill_points - 1
 				case default
-					print *,input,' is not a valid command'
+					print '(a1,a23)',input,' is not a valid command'
 			end select
 		end do
 	end subroutine player_level_up
