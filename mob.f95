@@ -2,7 +2,7 @@ module class_mob
   implicit none
   
 	private
-	public :: mob, new_mob, get_info, attack
+	public :: mob, new_mob, get_info
 
 	type mob
 		character (len=20) :: name
@@ -19,7 +19,7 @@ module class_mob
     integer :: i, n, clock, irand
     integer, dimension(:), allocatable :: seed
     real    :: rrand, dungeon_scale
-    dungeon_scale = (dungeon_floor / 20)
+    dungeon_scale = (REAL(dungeon_floor) / 20)
     
     
     !set up our random stuff
@@ -53,7 +53,7 @@ module class_mob
       this%name = "Shade"
     else if (irand == 2) then
       this%name = "Zombie"
-    else 
+    else
       this%name = "Slime"
     end if
     
@@ -73,15 +73,7 @@ module class_mob
 		type(Mob), intent(in) :: this
 		!print *, 'Mob name is ', this%name
 		print *, this%name, ' has ', this%health, ' HP.'
+		print *, this%name, ' has ', this%strength, ' strength.'
 	end subroutine get_info
-
-
-	subroutine attack(att, def)
-		type(Mob), intent(in) :: att
-		type(Mob), intent(inout) :: def
-
-		print *, att%name, ' attacked ', def%name, ' for ', att%strength, ' damage'
-		def%health = def%health - att%strength
-  end subroutine attack
     
 end module class_Mob

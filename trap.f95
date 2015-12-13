@@ -132,7 +132,7 @@ contains
 		! Check if the player dodges the trap.
 		if (this%triggered .eqv. .false.) then
 			this%triggered = .true.
-			if (plr%dodge_chance > (irand + (dungeon%floor_number/20)) .OR. (this%triggered .eqv. .false.)) then
+			if (plr%dodge_chance > (irand + (dungeon%floor_number/20))) then
 				print*, " Due to your deftly abilities, you succesfully dodge the ", trim(this%trap_name), "!"
 			else 
 				if (this%trap_type .eq. 1) then			
