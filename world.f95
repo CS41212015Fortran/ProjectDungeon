@@ -92,6 +92,9 @@ program world
 						print *, "You defeated the ", mob%name, "!"
 					 	exit combat
 					endif
+					if (p%hp<0) then
+						exit main
+				  end if
 
 					else
 						!mob does their turn
@@ -129,7 +132,7 @@ program world
 		  	! If the room contains a trap
 				if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_north(d)
@@ -138,7 +141,7 @@ program world
 		  else if(index(command, "south") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p , d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_south(d)
@@ -147,7 +150,7 @@ program world
 		  else if(index(command, "east") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_east(d)
@@ -156,7 +159,7 @@ program world
 		  else if(index(command, "west") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_west(d)
@@ -165,7 +168,7 @@ program world
 		  else if(index(command, "up") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
 				call go_up(d)
@@ -174,55 +177,7 @@ program world
 		  else if(index(command, "down") > 0) then
 		  	if (d%has_trap) then
 					t = Trap("mine", 1)
-					call triggerTrap(t)
+					call triggerTrap(t, p, d)
 					call effectPlayer(t, p, d)
 				end if
-				call go_down(d)
-
-			! Take an item
-		  else if(index(command, "take") > 0) then
-
-		  ! Check for traps
-		  else if(index(command, "check-trap") > 0) then
-
-		  ! Disarm a trap
-		  else if(index(command, "disarm-trap") > 0) then
-
-		  ! Unlock a chest if you have keys
-		  else if(index(command, "unlock") > 0) then
-		  	!If the room contains a treasure chest
-				if (d%has_treasure) then
-					print*, "There is a locked treasure chest in this room."
-					call unlockChest(c, p)
-				end if
-
-			! Buy an item from a shop
-		  else if(index(command, "buy") > 0) then
-
-		 	! Sell an item at a shop
-		  else if(index(command, "sell") > 0) then
-
-		  ! Drop an item
-		  else if(index(command, "drop") > 0) then
-
-		  ! Check your stats
-		  else if(index(command, "check-stats") > 0) then
-		  	call print_stats(p)
-
-		  ! Check your items
-		  else if(index(command, "check-item") > 0) then
-
-		  ! Look around you to gather your bearings
-		  else if(index(command, "look") > 0) then
-
-			! Quit the game
-			else if(index(command, "quit") > 0) then
-				exit main
-			else
-				print *, "I don't know what you mean by ",command
-			end if
-
-		  read (*,'(A)') command
-	end do main
-	print *, "Game Over: Your Final Score is ",p%score
-end program world
+				c
