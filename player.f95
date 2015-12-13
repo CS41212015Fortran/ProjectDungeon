@@ -26,6 +26,7 @@ module classPlayer
 
 	contains
 
+	!check if the player has at least one key (to open chests and doors)
 	function has_key(this) result (bool)
 		implicit none
 		type(Player), intent(in) :: this
@@ -38,11 +39,12 @@ module classPlayer
 		end if
 	end function has_key
 
+	!used for intial character creation and leveling up player stats
 	subroutine player_level_up(this)
 		implicit none
 		type(Player), intent(inout) :: this
 		type(character) :: input
-		
+
 		do while (this%skill_points>0)
 			print *,'you have ',this%skill_points,' skill point(s) remaining'
 			read *,input
@@ -62,6 +64,7 @@ module classPlayer
 		end do
 	end subroutine player_level_up
 
+	!mutator for changing player stats
 	subroutine update_player_stats(this,c,i)
 		implicit none
 		type(Player), intent(inout) :: this
@@ -87,6 +90,7 @@ module classPlayer
 		end select
 	end subroutine update_player_stats
 
+	!used to calculate derived stats
 	subroutine update_derived_stats(this)
 		implicit none
 		type(Player), intent(inout) :: this
@@ -101,6 +105,7 @@ module classPlayer
 
 	end subroutine update_derived_stats
 
+	!prints out prevalent charater statistics
 	subroutine short_stats(this)
 		implicit none
 		type(Player), intent(in) :: this
@@ -111,6 +116,7 @@ module classPlayer
 		Print  "(a14,i10)",'SKILL POINTS= ',this%skill_points
 	end subroutine short_stats
 
+	!prints out full character sheet
 	subroutine print_stats(this)
 		implicit none
 		type(Player), intent(in) :: this
@@ -134,12 +140,13 @@ module classPlayer
 
 	end subroutine print_stats
 
+  !prints the players final score
   function get_score(this) result (score)
     implicit none
     type(Player) :: this
     integer :: score !score
     score = 0
-    
+
     score = score + this%hp
     score = score + this%mana
     score = score + this%gold * 1000
@@ -147,7 +154,7 @@ module classPlayer
     score = score + this%strength * 150
     score = score + this%intelegence * 150
     score = score + this%moxie * 150
-      
+
   end function get_score
-  
+
 end module classPlayer
