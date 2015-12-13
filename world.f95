@@ -19,7 +19,7 @@ program world
 	real 								:: rrand
 
 	!init player
-	print *,' Enter player name '
+	print '(a19)',' Enter player name '
 	read (*,'(A)') p%name
 	p%strength    =1
 	p%intelegence =1
@@ -32,7 +32,6 @@ program world
 	call update_derived_stats(p)
 
 	!init spellbook
-
 	fireball%name      = "Fireball"
 	fireball%mana_cost = 30
 	fireball%dice_roll = 40
@@ -42,14 +41,14 @@ program world
 	heal%dice_roll = 40
 
 	print *,''
-  print *,adjustl('Good Morrow '), p%name
-	print *,adjustl('Time to boost your stats')
-	print *,adjustl('You major stats are Strength, Intelegence, and Moxie')
-	print *,adjustl('Strength determines you max HP and how much damage your melee attacks will do')
-	print *,adjustl('Intelegence determines your max Mana, your Perception, and how much damage spells will do')
-	print *,adjustl('Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites')
-	print *,adjustl('Entering the following chacter will boost that stat by 1')
-	print *,adjustl('Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie')
+  print '(a12a32)','Good Morrow ', p%name
+	print '(a24)','Time to boost your stats'
+	print '(a53)','You major stats are Strength, Intelegence, and Moxie'
+	print '(a78)','Strength determines you max HP and how much damage your melee attacks will do'
+	print '(a90)','Intelegence determines your max Mana, your Perception, and how much damage spells will do'
+	print '(a14)','Moxie determines your chance for Dodging, Disarming traps, and other "Rouge-like" abilites'
+	print '(a14)','Entering the following chacter will boost that stat by 1'
+	print '(a14)','Valid Commands are "s" for strength, "i" for intelegence, and "m" for moxie'
 	print *,''
 	call player_level_up(p)
 	print *,''
